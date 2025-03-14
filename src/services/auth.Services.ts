@@ -15,7 +15,8 @@ const authServices = {
       console.log("Login API Response:", response);
       return response;
     } catch (error) {
-      console.error("Login API Error:", error.response?.data || error.message);
+      const err = error as { response?: { data: any }; message?: string }; // 👈 Konversi tipe
+      console.error("Login API Error:", err.response?.data || err.message);
       throw error;
     }
   },
