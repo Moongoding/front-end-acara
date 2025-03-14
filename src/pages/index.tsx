@@ -11,7 +11,6 @@ export default function Home() {
     >
       <PageHead title="Home" />
       <Button color="primary">Button</Button>;
-      <p>Untuk memancing</p>
     </main>
   );
 }

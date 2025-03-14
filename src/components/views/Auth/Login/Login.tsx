@@ -50,7 +50,7 @@ const Login = () => {
         <CardBody className="p-6 md:p-8">
           <h2 className="text-2xl font-bold text-danger">Login</h2>
           <p className="mb-4 mt-2 text-sm">
-            Don't have an account ?&nbsp;
+            {`Don't have an account?`}
             <Link href="/auth/register" legacyBehavior>
               <a className="font-semibold text-danger-400 hover:underline">
                 Register here
