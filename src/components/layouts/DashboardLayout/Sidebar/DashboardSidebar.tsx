@@ -47,7 +47,7 @@ const DashboardSidebar = (props: PropTypes) => {
               className={cn(
                 "my-1 flex h-12 cursor-pointer items-center rounded-lg text-2xl",
                 {
-                  "bg-danger-500 text-white": item.href === router.pathname,
+                  "bg-danger-500 text-white": router.pathname.startsWith(item.href),
                 },
               )}
               onClick={() => router.push(item.href)}
