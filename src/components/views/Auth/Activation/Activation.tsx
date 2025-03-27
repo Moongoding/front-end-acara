@@ -1,4 +1,5 @@
 import { Button } from "@nextui-org/react";
+// import { Button } from "@nextui-org/button";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
@@ -43,7 +44,7 @@ const Activation = (props: PropTypes) => {
           className="mt-4 w-fit border border-red-500 text-red-500 transition duration-300 hover:bg-red-500 hover:text-white"
           variant="bordered"
           color="danger"
-          onClick={() => router.push("/")}
+          onPress={() => router.push("/")}
         >
           Back To Home
         </Button>
