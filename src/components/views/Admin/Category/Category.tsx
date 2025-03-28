@@ -2,9 +2,10 @@ import DataTable from "@/components/ui/DataTable";
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Key, ReactNode, useCallback } from "react";
+import { ChangeEvent, Key, ReactNode, useCallback } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { COLUMN_LIST_CATEGORY } from "./Category.Constanst";
+import { LIMIT_LISTS } from "@/constants/list.constants";
 
 
 
@@ -43,18 +44,39 @@ const Category = () => {
             }
         },
         [push],
-    )
+    );
+
     return (
         <div>
             <section>
-                <DataTable renderCell={renderCell} columns={COLUMN_LIST_CATEGORY} data={[
-                    {
-                        _id: "123",
-                        name: "Category 1",
-                        description: "Description 1",
-                        icon: "/images/general/logo.png",
-                    },
-                ]}></DataTable>
+                <DataTable
+                    buttonTopContentLabel="Create Category"
+                    columns={COLUMN_LIST_CATEGORY}
+                    currentPage={1}
+                    data={[
+                        {
+                            _id: "123",
+                            name: "Category 1",
+                            description: "Description 1",
+                            icon: "/images/general/logo.png",
+                        },
+                    ]}
+                    emptyContent="Category is empty"
+                    limit={LIMIT_LISTS[0].label}
+                    onChangeLimit={() => { }}
+                    onChangePage={() => { }}
+                    onClearSearch={function (): void {
+                        throw new Error("Function not implemented.");
+                    }}
+                    onChangeSearch={function (e: ChangeEvent<HTMLInputElement>): void {
+                        throw new Error("Function not implemented.");
+                    }}
+                    onClickButtonTopContent={function (): void {
+                        throw new Error("Function not implemented.");
+                    }}
+                    renderCell={renderCell}
+                    totalPages={2}
+                />
             </section>
         </div>
     );
