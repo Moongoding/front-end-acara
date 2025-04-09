@@ -15,8 +15,8 @@ const instance = axios.create({
   headers,
   timeout: 60 * 1000,
 });
-console.log("Base URL Axios:", process.env.NEXT_PUBLIC_API_URL);
-console.log("Base URL Axios:", environment.API_URL);
+// console.log("Base URL Axios:", process.env.NEXT_PUBLIC_API_URL);
+// console.log("Base URL Axios:", environment.API_URL);
 
 instance.interceptors.request.use(
   async (request) => {

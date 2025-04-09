@@ -7,7 +7,7 @@ interface PropTypes {
 }
 
 const ActivationPage = (props: PropTypes) => {
-  console.log("Props diterima di ActivationPage:", props);
+  // console.log("Props diterima di ActivationPage:", props);
   return (
     <AuthLayout title="Acara | Activation">
       <Activation {...props} />
@@ -18,7 +18,7 @@ const ActivationPage = (props: PropTypes) => {
 export async function getServerSideProps(context: { query: { code: string } }) {
   try {
     const result = await authServices.activation({ code: context.query.code });
-    console.log(result.data);
+    // console.log(result.data);
     if (result.data.data) {
       return {
         props: {

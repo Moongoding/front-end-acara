@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
             url.searchParams.set("callbackUrl", encodeURI(request.url));
             return NextResponse.redirect(url)
         }
-        console.log(token);
+        // console.log(token);
 
         // Jika token bukan admin, redirect ke /
         if (token?.user?.role !== "admin") {

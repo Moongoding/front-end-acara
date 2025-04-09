@@ -10,9 +10,9 @@ const authServices = {
   // login: (payload: ILogin) => instance.post(`${endpoint.AUTH}/login`, payload),
   login: async (payload: ILogin) => {
     try {
-      console.log("Sending login request:", payload);
+      // console.log("Sending login request:", payload);
       const response = await instance.post(`${endpoint.AUTH}/login`, payload);
-      console.log("Login API Response:", response);
+      // console.log("Login API Response:", response);
       return response;
     } catch (error) {
       const err = error as { response?: { data: any }; message?: string }; // 👈 Konversi tipe
