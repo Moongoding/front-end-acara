@@ -5,16 +5,15 @@ import {
     DropdownItem,
     DropdownMenu,
     DropdownTrigger,
+    useDisclosure,
 } from "@nextui-org/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { ChangeEvent, Key, ReactNode, useCallback, useEffect } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { COLUMN_LIST_CATEGORY } from "./Category.Constanst";
-import { LIMIT_LISTS } from "@/constants/list.constants";
 import useCategory from "./useCategory";
-import InputFile from "@/components/ui/InputFile";
-
+import AddCategoryModal from './AddCategoryModal';
 
 
 const Category = () => {
@@ -33,7 +32,10 @@ const Category = () => {
         handleChangePage,
         handleSearch,
         handleClearSearch,
+        refetchCategory
     } = useCategory();
+
+    const addCategoryModal = useDisclosure();
 
     // console.log("INI DATA CATEGORY", dataCategory);
     // useEffect(() => {
@@ -106,16 +108,15 @@ const Category = () => {
                         onChangePage={handleChangePage}
                         onClearSearch={handleClearSearch}
                         onChangeSearch={handleSearch}
-                        onClickButtonTopContent={function (): void {
-                            throw new Error("Function not implemented.");
-                        }}
+                        onClickButtonTopContent={addCategoryModal.onOpen}
                         renderCell={renderCell}
                         totalPages={dataCategory?.pagination.totalPages}
                     />
                 )}
+                <AddCategoryModal refetchCategory={refetchCategory} {...addCategoryModal} />
             </section>
 
-            <InputFile name="input" isDropable />
+            {/* <InputFile name="input" isDropable /> */}
         </div >
     );
 };

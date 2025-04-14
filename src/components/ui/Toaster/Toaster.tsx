@@ -39,8 +39,7 @@ const Toaster = ({ type, message }: PropTypes) => {
                     transition={{ duration: 0.3 }}
                     role="alert"
                     aria-labelledby="toaster-label"
-                    className={`fixed right-8 top-8 z-50 max-w-xs rounded-xl border shadow-md p-4 flex items-start gap-3 ${bgColor[type] || "bg-white border-gray-200 text-gray-800"
-                        }`}
+                    className={`fixed right-8 top-8 z-[9999] max-w-xs rounded-xl border shadow-md p-4 flex items-start gap-3 ${bgColor[type] || "bg-white border-gray-200 text-gray-800"}`}
                 >
                     {iconList[type] || iconList.info}
                     <p id="toaster-label" className="text-sm font-medium">
