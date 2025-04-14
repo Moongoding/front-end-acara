@@ -4,11 +4,12 @@ import categoryServices from "@/services/category.Services";
 import { useQuery } from "@tanstack/react-query";
 import { delay } from "framer-motion";
 import { useRouter } from "next/router";
-import { ChangeEvent, useMemo } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 
 const useCategory = () => {
     const debounce = useDebounce();
     const router = useRouter();
+    const [selectedId, setSelectedId] = useState<string>("");
 
     const currentLimit = useMemo(() => {
         const limit = Number(router.query.limit);
@@ -119,7 +120,10 @@ const useCategory = () => {
         handleChangePage,
         handleSearch,
         handleClearSearch,
-        refetchCategory
+        refetchCategory,
+
+        selectedId,
+        setSelectedId
     };
 };
 

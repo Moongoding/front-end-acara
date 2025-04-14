@@ -30,13 +30,7 @@ const useMediaHandling = () => {
             }) => uploadIcon(variables.file, variables.callback),
             onError: (error: any) => {
                 const friendlyMessage = getFriendlyErrorMessage(error);
-                if (error?.response?.status === 500 || friendlyMessage.includes("token")) {
-                    showToaster({ type: "error", message: "Sesi Anda telah habis. Silakan login ulang." });
-                    // Redirect ke login atau panggil logout
-                    signOut(); // atau logout()
-                } else {
-                    showToaster({ type: "error", message: friendlyMessage });
-                }
+                showToaster({ type: "error", message: friendlyMessage });
             },
             onSuccess: () => {
                 showToaster({ type: "success", message: "File uploaded successfully!" });
@@ -61,7 +55,7 @@ const useMediaHandling = () => {
                 showToaster({ type: "error", message: friendlyMessage });
             },
             onSuccess: () => {
-                showToaster({ type: "success", message: "File deleted successfully!" });
+                showToaster({ type: "success", message: "Image deleted successfully!" });
             }
         });
 

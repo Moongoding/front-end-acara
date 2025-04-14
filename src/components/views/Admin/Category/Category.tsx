@@ -9,11 +9,12 @@ import {
 } from "@nextui-org/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { ChangeEvent, Key, ReactNode, useCallback, useEffect } from "react";
+import { ChangeEvent, Key, ReactNode, useCallback, useEffect, useState } from "react";
 import { CiMenuKebab } from "react-icons/ci";
 import { COLUMN_LIST_CATEGORY } from "./Category.Constanst";
 import useCategory from "./useCategory";
 import AddCategoryModal from './AddCategoryModal';
+import DeleteCategoryModal from './DeleteCategoryModal'
 
 
 const Category = () => {
@@ -32,10 +33,15 @@ const Category = () => {
         handleChangePage,
         handleSearch,
         handleClearSearch,
-        refetchCategory
+        refetchCategory,
+
+        // selectedId,
+        // setSelectedId
     } = useCategory();
 
     const addCategoryModal = useDisclosure();
+    const [selectedCategory, setSelectedCategory] = useState<{ _id: string; icon?: string } | null>(null);
+    const deleteCategoryModal = useDisclosure();
 
     // console.log("INI DATA CATEGORY", dataCategory);
     // useEffect(() => {
@@ -60,8 +66,8 @@ const Category = () => {
         (category: Record<string, unknown>, columnKey: Key) => {
             const cellValue = category[columnKey as keyof typeof category];
             switch (columnKey) {
-                // case "icon":
-                //     return (<Image src={`${cellValue}`} alt="icon" width={100} height={200} />);
+                case "icon":
+                    return (<Image src={`${cellValue}`} alt="icon" width={100} height={200} />);
 
                 case "actions":
                     return (
@@ -77,7 +83,19 @@ const Category = () => {
                                     Detail Category
                                 </DropdownItem>
 
-                                <DropdownItem key="delete-category" className="text-danger-500">
+                                <DropdownItem key="delete-category" className="text-danger-500"
+                                    // onPress={() => {
+                                    // setSelectedId(`${category._id}`);
+                                    // deleteCategoryModal.onOpen();
+                                    // }}
+                                    onPress={() => {
+                                        setSelectedCategory({
+                                            _id: category._id as string,
+                                            icon: category.icon as string | undefined
+                                        });
+                                        deleteCategoryModal.onOpen();
+                                    }}
+                                >
                                     Delete
                                 </DropdownItem>
                             </DropdownMenu>
@@ -114,6 +132,20 @@ const Category = () => {
                     />
                 )}
                 <AddCategoryModal refetchCategory={refetchCategory} {...addCategoryModal} />
+
+                {/* <DeleteCategoryModal
+                    {...deleteCategoryModal}
+                    selectedId={selectedId}
+                    setSelectedId={setSelectedId}
+                    refetchCategory={refetchCategory}
+                /> */}
+
+                <DeleteCategoryModal
+                    {...deleteCategoryModal}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                    refetchCategory={refetchCategory}
+                />
             </section>
 
             {/* <InputFile name="input" isDropable /> */}

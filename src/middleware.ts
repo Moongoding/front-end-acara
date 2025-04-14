@@ -9,48 +9,60 @@ export async function middleware(request: NextRequest) {
     const token: JWTExtended | null = await getToken({
         req: request,
         secret: environment.AUTH_SECRET,
-
     });
 
     const { pathname } = request.nextUrl;
-    // Jika user sudah login, redirect dari halaman auth ke dashboard
-    if (pathname === "/auth/login" || pathname === "/auth/register") {
-        if (token) {
-            return NextResponse.redirect(new URL("/", request.url));
+
+    // Redirect jika tidak ada token dan sedang akses halaman yang dilindungi
+    if ((pathname.startsWith("/admin") || pathname.startsWith("/member")) && !token) {
+        const loginUrl = new URL("/auth/login", request.url);
+        loginUrl.searchParams.set("callbackUrl", encodeURI(request.url));
+        loginUrl.searchParams.set("sessionExpired", "true");
+        return NextResponse.redirect(loginUrl);
+    }
+
+    // Jika ada token, lakukan verifikasi ke backend
+    let tokenValid = false;
+    if (token?.accessToken) {
+        try {
+            const res = await fetch(`${environment.API_URL}/auth/me`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token.accessToken}`, // atau token.jwt jika pakai next-auth JWT
+                    "Content-Type": "application/json"
+                },
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                if (data?.data?.id) {
+                    tokenValid = true;
+                }
+            } else {
+                console.warn("Invalid token response from backend:", res.status);
+            }
+        } catch (err) {
+            console.error("Error validating token:", err);
         }
     }
 
-    // Proteksi akses ke halaman admin
-    if (pathname.startsWith("/admin")) {
-        if (!token) {
-            const url = new URL("/auth/login", request.url);
-            url.searchParams.set("callbackUrl", encodeURI(request.url));
-            return NextResponse.redirect(url)
-        }
-        // console.log(token);
 
-        // Jika token bukan admin, redirect ke /
-        if (token?.user?.role !== "admin") {
-            return NextResponse.redirect(new URL("/", request.url));
-        }
-
-        // Redirect `/admin` ke `/admin/dashboard`
-        if (pathname === "/admin") {
-            return NextResponse.redirect(new URL("/admin/dashboard", request.url));
-        }
+    // Redirect jika role tidak sesuai
+    if (pathname.startsWith("/admin") && token?.user?.role !== "admin") {
+        return NextResponse.redirect(new URL("/", request.url));
     }
 
-    // Proteksi akses ke halaman member
-    if (pathname.startsWith("/member")) {
-        if (!token) {
-            const url = new URL("/auth/login", request.url);
-            url.searchParams.set("callbackUrl", encodeURI(request.url));
-            return NextResponse.redirect(url)
-        }
-        // Redirect `/member` ke `/member/dashboard`
-        if (pathname === "/member") {
-            return NextResponse.redirect(new URL("/member/dashboard", request.url));
-        }
+    if (pathname === "/admin") {
+        return NextResponse.redirect(new URL("/admin/dashboard", request.url));
+    }
+
+    if (pathname === "/member") {
+        return NextResponse.redirect(new URL("/member/dashboard", request.url));
+    }
+
+    // Jika sudah login, jangan ke halaman login/register lagi
+    if ((pathname === "/auth/login" || pathname === "/auth/register") && token) {
+        return NextResponse.redirect(new URL("/", request.url));
     }
 }
 

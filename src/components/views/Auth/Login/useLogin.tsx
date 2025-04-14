@@ -7,6 +7,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import { ToasterContext } from "@/contexts/ToasterContexts";
+import { useEffect } from "react";
 
 const loginSchema = Yup.object().shape({
   indentifier: Yup.string().required("Please input your email or username"),
@@ -21,6 +22,16 @@ const useLogin = () => {
   const { showToaster } = useContext(ToasterContext);
 
   const callbackUrl: string = (router.query.callbackUrl as string) || "/";
+
+  useEffect(() => {
+    const sessionExpired = router.query.sessionExpired;
+    if (sessionExpired === "true") {
+      showToaster({
+        type: "warning",
+        message: "Sesi Anda telah habis. Silakan login kembali.",
+      });
+    }
+  }, [router.query.sessionExpired, showToaster]);
 
   const {
     control,
