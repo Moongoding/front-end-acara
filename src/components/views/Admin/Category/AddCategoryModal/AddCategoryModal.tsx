@@ -19,15 +19,15 @@ const AddCategoryModal = (props: PropTypes) => {
         errors,
         handleSubmitForm,
         handleAddCategory,
-        isPandingAddCategory,
+        isPendingAddCategory,
         isSuccessAddCategory,
         handleCancel,
 
         preview,
         handleUploadIcon,
-        isPandingUploadFile,
+        isPendingUploadFile,
         handleDeleteIcon,
-        isPandingDeleteFile,
+        isPendingDeleteFile,
     } = useAddCategoryModal();
 
     useEffect(() => {
@@ -39,7 +39,7 @@ const AddCategoryModal = (props: PropTypes) => {
 
 
 
-    const disabledSubmit = isPandingAddCategory || isPandingUploadFile || isPandingDeleteFile
+    const disabledSubmit = isPendingAddCategory || isPendingUploadFile || isPendingDeleteFile
 
     return (
         <Modal onClose={() => handleCancel(onClose)} onOpenChange={onOpenChange} isOpen={isOpen} placement="center" scrollBehavior="inside">
@@ -47,14 +47,21 @@ const AddCategoryModal = (props: PropTypes) => {
                 <ModalContent className="mb-4">
                     <ModalHeader>Add Category</ModalHeader>
                     <ModalBody>
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-2">
                             <p className="text-sm font-bold">Information</p>
                             <Controller name="name" control={control} render={({ field }) => (
                                 <Input {...field} autoFocus label="Name" variant="bordered" type="text" isInvalid={errors.name !== undefined} errorMessage={errors.name?.message} />
                             )} />
 
                             <Controller name="description" control={control} render={({ field }) => (
-                                <Textarea {...field} label="Description" variant="bordered" isInvalid={errors.description !== undefined} errorMessage={errors.description?.message} />
+                                <Textarea
+                                    {...field}
+                                    label="Description"
+                                    variant="bordered"
+                                    isInvalid={errors.description !== undefined}
+                                    errorMessage={errors.description?.message}
+                                    className="mb-2"
+                                />
                             )} />
 
                             <p className="text-sm font-bold">Icon</p>
@@ -65,13 +72,14 @@ const AddCategoryModal = (props: PropTypes) => {
                                     <InputFile
                                         {...field}
                                         onUpload={(files) => handleUploadIcon(files, onChange)}
-                                        isUploading={isPandingUploadFile}
+                                        isUploading={isPendingUploadFile}
                                         onDelete={() => handleDeleteIcon(onChange)}
-                                        isDeleting={isPandingDeleteFile}
+                                        isDeleting={isPendingDeleteFile}
                                         isInvalid={errors.icon !== undefined}
                                         errorMessage={errors.icon?.message}
                                         isDropable
                                         preview={typeof preview === 'string' ? preview : ""}
+                                        clasName="mb-2"
                                     />
                                 )} />
                         </div>

@@ -22,7 +22,7 @@ const useMediaHandling = () => {
         callback(icon);
     };
 
-    const { mutate: mutateUploadFile, isPending: isPandingUploadFile, } =
+    const { mutate: mutateUploadFile, isPending: isPendingUploadFile, } =
         useMutation({
             mutationFn: (variables: {
                 file: File,
@@ -44,7 +44,7 @@ const useMediaHandling = () => {
         };
     };
 
-    const { mutate: mutateDeleteFile, isPending: isPandingDeleteFile, } =
+    const { mutate: mutateDeleteFile, isPending: isPendingDeleteFile, } =
         useMutation({
             mutationFn: (variables: {
                 fileUrl: string,
@@ -61,9 +61,9 @@ const useMediaHandling = () => {
 
     return {
         mutateUploadFile,
-        isPandingUploadFile,
+        isPendingUploadFile,
         mutateDeleteFile,
-        isPandingDeleteFile
+        isPendingDeleteFile
     };
 };
 

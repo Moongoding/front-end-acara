@@ -19,9 +19,9 @@ const useAddCategoryModal = () => {
     const { showToaster } = useContext(ToasterContext);
     const {
         mutateUploadFile,
-        isPandingUploadFile,
+        isPendingUploadFile,
         mutateDeleteFile,
-        isPandingDeleteFile
+        isPendingDeleteFile
     } = useMediaHandling();
 
     const {
@@ -38,21 +38,6 @@ const useAddCategoryModal = () => {
 
     const preview = watch("icon");
 
-
-    // const handleUploadIcon = (
-    //     files: FileList,
-    //     onChange: (files: FileList | undefined) => void
-    // ) => {
-    //     if (files.length !== 0) {
-    //         onChange(files);
-    //         mutateUploadFile({
-    //             file: files[0],
-    //             callback: (fileUrl: string) => {
-    //                 setValue("icon", fileUrl);
-    //             },
-    //         });
-    //     }
-    // };
 
     const handleUploadIcon = (
         files: FileList,
@@ -120,7 +105,7 @@ const useAddCategoryModal = () => {
 
 
 
-    const { mutate: mutateAddCategory, isPending: isPandingAddCategory, isSuccess: isSuccessAddCategory } = useMutation({
+    const { mutate: mutateAddCategory, isPending: isPendingAddCategory, isSuccess: isSuccessAddCategory } = useMutation({
         mutationFn: addCategory,
         onError: (error) => {
             const friendlyMessage = getFriendlyErrorMessage(error);
@@ -145,14 +130,14 @@ const useAddCategoryModal = () => {
         reset,
         handleSubmitForm,
         handleAddCategory,
-        isPandingAddCategory,
+        isPendingAddCategory,
         isSuccessAddCategory,
 
         preview,
         handleUploadIcon,
-        isPandingUploadFile,
+        isPendingUploadFile,
         handleDeleteIcon,
-        isPandingDeleteFile,
+        isPendingDeleteFile,
         handleCancel
     }
 };
