@@ -9,7 +9,6 @@ const useCategory = () => {
     const router = useRouter();
     const [selectedId, setSelectedId] = useState<{ _id: string; icon?: string } | null>(null);
 
-
     const {
         currentLimit,
         currentPage,

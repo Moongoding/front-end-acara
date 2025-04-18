@@ -19,9 +19,8 @@ import useChangeUrl from "@/hooks/useChangeUrl";
 
 
 const Category = () => {
-    const { push, isReady, query } = useRouter();
+    const { push, query } = useRouter();
 
-    // const { setURL } = useCategory();
     const {
         isRefetchingCategory,
         dataCategory,
@@ -31,14 +30,6 @@ const Category = () => {
         setSelectedId
     } = useCategory();
 
-    const {
-        currentLimit,
-        currentPage,
-        handleChangeLimit,
-        handleChangePage,
-        handleSearch,
-        handleClearSearch,
-    } = useChangeUrl();
 
     const addCategoryModal = useDisclosure();
     const deleteCategoryModal = useDisclosure();
@@ -93,15 +84,9 @@ const Category = () => {
                     <DataTable
                         buttonTopContentLabel="Create Category"
                         columns={COLUMN_LIST_CATEGORY}
-                        currentPage={Number(currentPage)}
                         data={dataCategory?.data || []}
                         emptyContent="Category is empty"
                         isLoading={isLoadingCategory || isRefetchingCategory}
-                        limit={String(currentLimit)}
-                        onChangeLimit={handleChangeLimit}
-                        onChangePage={handleChangePage}
-                        onClearSearch={handleClearSearch}
-                        onChangeSearch={handleSearch}
                         onClickButtonTopContent={addCategoryModal.onOpen}
                         renderCell={renderCell}
                         totalPages={dataCategory?.pagination.totalPages}
