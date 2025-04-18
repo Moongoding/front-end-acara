@@ -1,8 +1,8 @@
 import { ToasterContext } from "@/contexts/ToasterContexts";
 import uploadServices from "@/services/upload.Services";
 import { getFriendlyErrorMessage } from "@/utils/errorMessage";
+import { handleApiError } from "@/utils/handleApiError";
 import { useMutation } from "@tanstack/react-query";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 
@@ -28,10 +28,14 @@ const useMediaHandling = () => {
                 file: File,
                 callback: (fileUrl: string) => void
             }) => uploadIcon(variables.file, variables.callback),
-            onError: (error: any) => {
-                const friendlyMessage = getFriendlyErrorMessage(error);
-                showToaster({ type: "error", message: friendlyMessage });
-            },
+            // onError: (error: any) => {
+            //     const friendlyMessage = getFriendlyErrorMessage(error);
+            //     showToaster({ type: "error", message: friendlyMessage });
+
+            // },
+
+            onError: (error) => handleApiError(error, showToaster, router),
+
             onSuccess: () => {
                 showToaster({ type: "success", message: "File uploaded successfully!" });
             }
@@ -50,10 +54,11 @@ const useMediaHandling = () => {
                 fileUrl: string,
                 callback: () => void
             }) => deleteIcon(variables.fileUrl, variables.callback),
-            onError: (error) => {
-                const friendlyMessage = getFriendlyErrorMessage(error);
-                showToaster({ type: "error", message: friendlyMessage });
-            },
+            // onError: (error) => {
+            //     const friendlyMessage = getFriendlyErrorMessage(error);
+            //     showToaster({ type: "error", message: friendlyMessage });
+            // },
+            onError: (error) => handleApiError(error, showToaster, router),
             onSuccess: () => {
                 showToaster({ type: "success", message: "Image deleted successfully!" });
             }

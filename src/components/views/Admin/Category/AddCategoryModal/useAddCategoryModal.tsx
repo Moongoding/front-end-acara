@@ -8,6 +8,8 @@ import * as yup from 'yup';
 import { ToasterContext } from "@/contexts/ToasterContexts";
 import { useContext } from 'react';
 import useMediaHandling from '@/hooks/useMediaHandling';
+import { handleApiError } from '@/utils/handleApiError';
+import { useRouter } from 'next/router';
 
 const schema = yup.object().shape({
     name: yup.string().required("Please input name"),
@@ -16,6 +18,7 @@ const schema = yup.object().shape({
 });
 
 const useAddCategoryModal = () => {
+    const router = useRouter();
     const { showToaster } = useContext(ToasterContext);
     const {
         mutateUploadFile,
@@ -107,10 +110,11 @@ const useAddCategoryModal = () => {
 
     const { mutate: mutateAddCategory, isPending: isPendingAddCategory, isSuccess: isSuccessAddCategory } = useMutation({
         mutationFn: addCategory,
-        onError: (error) => {
-            const friendlyMessage = getFriendlyErrorMessage(error);
-            showToaster({ type: "error", message: friendlyMessage });
-        },
+        // onError: (error) => {
+        //     const friendlyMessage = getFriendlyErrorMessage(error);
+        //     showToaster({ type: "error", message: friendlyMessage });
+        // },
+        onError: (error) => handleApiError(error, showToaster, router),
         onSuccess: () => {
             showToaster({ type: "success", message: "Success add category" });
 
@@ -120,9 +124,6 @@ const useAddCategoryModal = () => {
 
 
     const handleAddCategory = (data: ICategory) => mutateAddCategory(data);
-
-
-
 
     return {
         control,

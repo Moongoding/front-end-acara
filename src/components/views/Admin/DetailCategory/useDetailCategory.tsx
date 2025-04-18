@@ -6,14 +6,9 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 
-
-
-
-
 const useDetailCategory = () => {
     const { query, isReady } = useRouter();
     const { showToaster } = useContext(ToasterContext);
-
 
     const getCategoryById = async (id: string) => {
         const { data } = await categoryServices.getCategoryById(id);
@@ -26,9 +21,6 @@ const useDetailCategory = () => {
         queryFn: () => getCategoryById(`${query.id}`),
         enabled: isReady,
     });
-
-
-
 
     const updateCategory = async (payload: ICategory) => {
         const { data } = await categoryServices.updateCategory(`${query.id}`, payload,);

@@ -8,8 +8,6 @@ interface PropTypes {
     onClose: () => void;
     refetchCategory: () => void;
     onOpenChange: () => void;
-    // selectedId: string
-    // setSelectedId: Dispatch<SetStateAction<string>>;
     selectedCategory: {
         _id: string;
         icon?: string;
@@ -17,7 +15,6 @@ interface PropTypes {
     setSelectedCategory: Dispatch<SetStateAction<{ _id: string; icon?: string } | null>>;
 
 }
-
 
 const DeleteCategoryModal = (props: PropTypes) => {
     const { isOpen, onOpenChange, onClose, refetchCategory, selectedCategory, setSelectedCategory, } = props;
@@ -32,7 +29,6 @@ const DeleteCategoryModal = (props: PropTypes) => {
         if (isSuccessDeleteCategory) {
             onClose();
             refetchCategory();
-            // setSelectedId("");
             setSelectedCategory(null);
         }
     }, [isSuccessDeleteCategory, onClose, refetchCategory]);

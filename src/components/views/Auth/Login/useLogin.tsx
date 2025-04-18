@@ -8,6 +8,9 @@ import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import { ToasterContext } from "@/contexts/ToasterContexts";
 import { useEffect } from "react";
+import { handleApiError } from "@/utils/handleApiError";
+import { getFriendlyErrorMessage } from "@/utils/errorMessage";
+
 
 const loginSchema = Yup.object().shape({
   indentifier: Yup.string().required("Please input your email or username"),
@@ -18,7 +21,6 @@ const useLogin = () => {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-  // const { setToaster } = useContext(ToasterContext)
   const { showToaster } = useContext(ToasterContext);
 
   const callbackUrl: string = (router.query.callbackUrl as string) || "/";
@@ -28,7 +30,7 @@ const useLogin = () => {
     if (sessionExpired === "true") {
       showToaster({
         type: "warning",
-        message: "Sesi Anda telah habis. Silakan login kembali.",
+        message: "Your session has expired. Please log in again.",
       });
     }
   }, [router.query.sessionExpired, showToaster]);
@@ -56,10 +58,10 @@ const useLogin = () => {
 
   const { mutate: mutateLogin, isPending: isPendingLogin } = useMutation({
     mutationFn: loginService,
-    onError(error) {
-      showToaster({ type: "error", message: error.message });
+    onError: async (error) => {
+      await handleApiError(error, showToaster, router);
       setError("root", {
-        message: error.message,
+        message: getFriendlyErrorMessage(error),
       });
     },
     onSuccess: () => {

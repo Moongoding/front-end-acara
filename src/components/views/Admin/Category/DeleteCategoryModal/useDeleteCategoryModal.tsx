@@ -5,15 +5,13 @@ import { getFriendlyErrorMessage } from "@/utils/errorMessage";
 import { useMutation } from "@tanstack/react-query";
 import { useContext } from "react";
 import useMediaHandling from "@/hooks/useMediaHandling";
+import { handleApiError } from "@/utils/handleApiError";
+import { useRouter } from "next/router";
 
 const useDeleteCategoryModal = () => {
     const { showToaster } = useContext(ToasterContext);
     const { mutateDeleteFile } = useMediaHandling();
-
-    // const deleteCategory = async (id: string) => {
-    //     const res = await categoryServices.deleteCategory(id);
-    //     return res
-    // };
+    const router = useRouter();
 
     const deleteCategory = async ({ id, iconUrl }: { id: string, iconUrl: string }) => {
         await categoryServices.deleteCategory(id);
@@ -26,12 +24,17 @@ const useDeleteCategoryModal = () => {
     };
 
 
-    const { mutate: mutateDeleteCategory, isPending: isPendingDeleteCategory, isSuccess: isSuccessDeleteCategory } = useMutation({
+    const {
+        mutate: mutateDeleteCategory,
+        isPending: isPendingDeleteCategory,
+        isSuccess: isSuccessDeleteCategory
+    } = useMutation({
         mutationFn: deleteCategory,
-        onError(error) {
-            const friendlyMessage = getFriendlyErrorMessage(error);
-            showToaster({ type: "error", message: friendlyMessage });
-        },
+        // onError(error) {
+        //     const friendlyMessage = getFriendlyErrorMessage(error);
+        //     showToaster({ type: "error", message: friendlyMessage });
+        // },
+        onError: (error) => handleApiError(error, showToaster, router),
         onSuccess: () => {
             showToaster({ type: "info", message: "Delete Category Success" });
         },

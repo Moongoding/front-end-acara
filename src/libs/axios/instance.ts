@@ -1,10 +1,7 @@
 import environment from "@/config/environment";
 import { sessionExtended } from "@/types/Auth";
 import axios from "axios";
-import { error } from "console";
-import { promises } from "dns";
-import { request } from "http";
-import { getSession, signOut } from "next-auth/react";
+import { getSession } from "next-auth/react";
 
 const headers = {
   "Content-Type": "application/json",
@@ -29,27 +26,10 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// instance.interceptors.response.use(
-//   (response) => response,
-//   (error) => Promise.reject(error),
-// );
-
-// Interceptor untuk menangani response error, termasuk session expired
 instance.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const status = error?.response?.status;
-
-    // Cek apakah session expired atau unauthorized
-    if (status === 401 || status === 419) {
-      console.warn("Session expired. Logging out...");
-
-      // Optional: Clear session from next-auth
-      await signOut({ callbackUrl: "/auth/login" }); // Sesuaikan dengan path login kamu
-    }
-
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error),
 );
+
 
 export default instance;

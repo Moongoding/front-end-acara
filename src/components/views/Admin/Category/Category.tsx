@@ -15,6 +15,7 @@ import { COLUMN_LIST_CATEGORY } from "./Category.Constanst";
 import useCategory from "./useCategory";
 import AddCategoryModal from './AddCategoryModal';
 import DeleteCategoryModal from './DeleteCategoryModal'
+import useChangeUrl from "@/hooks/useChangeUrl";
 
 
 const Category = () => {
@@ -22,45 +23,25 @@ const Category = () => {
 
     // const { setURL } = useCategory();
     const {
-        setURL,
-        currentLimit,
         isRefetchingCategory,
-        currentPage,
-        currentSearch,
         dataCategory,
         isLoadingCategory,
+        refetchCategory,
+        selectedId,
+        setSelectedId
+    } = useCategory();
+
+    const {
+        currentLimit,
+        currentPage,
         handleChangeLimit,
         handleChangePage,
         handleSearch,
         handleClearSearch,
-        refetchCategory,
-
-        // selectedId,
-        // setSelectedId
-    } = useCategory();
+    } = useChangeUrl();
 
     const addCategoryModal = useDisclosure();
-    const [selectedCategory, setSelectedCategory] = useState<{ _id: string; icon?: string } | null>(null);
     const deleteCategoryModal = useDisclosure();
-
-    // console.log("INI DATA CATEGORY", dataCategory);
-    // useEffect(() => {
-    //     if (isReady) {
-    //         setURL();
-    //     }
-    // }, [isReady, setURL])
-
-    useEffect(() => {
-        if (
-            isReady
-            &&
-            currentLimit &&
-            currentPage &&
-            currentSearch !== undefined
-        ) {
-            setURL();
-        }
-    }, [isReady, currentLimit, currentPage, currentSearch, setURL]);
 
     const renderCell = useCallback(
         (category: Record<string, unknown>, columnKey: Key) => {
@@ -84,12 +65,8 @@ const Category = () => {
                                 </DropdownItem>
 
                                 <DropdownItem key="delete-category" className="text-danger-500"
-                                    // onPress={() => {
-                                    // setSelectedId(`${category._id}`);
-                                    // deleteCategoryModal.onOpen();
-                                    // }}
                                     onPress={() => {
-                                        setSelectedCategory({
+                                        setSelectedId({
                                             _id: category._id as string,
                                             icon: category.icon as string | undefined
                                         });
@@ -116,7 +93,6 @@ const Category = () => {
                     <DataTable
                         buttonTopContentLabel="Create Category"
                         columns={COLUMN_LIST_CATEGORY}
-                        // currentPage={1}
                         currentPage={Number(currentPage)}
                         data={dataCategory?.data || []}
                         emptyContent="Category is empty"
@@ -133,17 +109,10 @@ const Category = () => {
                 )}
                 <AddCategoryModal refetchCategory={refetchCategory} {...addCategoryModal} />
 
-                {/* <DeleteCategoryModal
-                    {...deleteCategoryModal}
-                    selectedId={selectedId}
-                    setSelectedId={setSelectedId}
-                    refetchCategory={refetchCategory}
-                /> */}
-
                 <DeleteCategoryModal
                     {...deleteCategoryModal}
-                    selectedCategory={selectedCategory}
-                    setSelectedCategory={setSelectedCategory}
+                    selectedCategory={selectedId}
+                    setSelectedCategory={setSelectedId}
                     refetchCategory={refetchCategory}
                 />
             </section>

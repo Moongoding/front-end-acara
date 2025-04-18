@@ -1,5 +1,4 @@
 import AppShell from "@/components/commons/AppShell";
-import Toaster from "@/components/ui/Toaster";
 import { ToasterProvider } from "@/contexts/ToasterContexts";
 import "@/styles/globals.css";
 import { NextUIProvider } from "@nextui-org/react";

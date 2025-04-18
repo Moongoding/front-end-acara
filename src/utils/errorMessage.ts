@@ -9,17 +9,17 @@ export const getFriendlyErrorMessage = (error: unknown): string => {
 
         switch (status) {
             case 400:
-                return "Data tidak valid. Silakan periksa kembali isian Anda.";
+                return "Invalid data. Please double check your information.";
             case 401:
-                return "Anda tidak memiliki otorisasi. Silakan login kembali.";
+                return "You do not have authorization. Please log in again.";
             case 403:
-                return "Anda tidak memiliki izin untuk melakukan aksi ini.";
+                return "You do not have permission to perform this action. Please log in again";
             case 404:
-                return "Sumber daya tidak ditemukan.";
+                return "Resource not found.";
             case 500:
-                return "Terjadi kesalahan pada server. Silakan coba beberapa saat lagi.";
+                return "An error occurred on the server. Please try again later.";
             default:
-                return serverMessage || "Terjadi kesalahan. Silakan coba lagi.";
+                return serverMessage || "An error occurred. Please try again.";
         }
     }
 
