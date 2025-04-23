@@ -1,22 +1,13 @@
 import DataTable from "@/components/ui/DataTable";
-import {
-    Button,
-    Dropdown,
-    DropdownItem,
-    DropdownMenu,
-    DropdownTrigger,
-    useDisclosure,
-} from "@nextui-org/react";
+import { useDisclosure } from "@nextui-org/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { ChangeEvent, Key, ReactNode, useCallback, useEffect, useState } from "react";
-import { CiMenuKebab } from "react-icons/ci";
+import { Key, ReactNode, useCallback } from "react";
 import { COLUMN_LIST_CATEGORY } from "./Category.Constanst";
 import useCategory from "./useCategory";
 import AddCategoryModal from './AddCategoryModal';
-import DeleteCategoryModal from './DeleteCategoryModal'
-import useChangeUrl from "@/hooks/useChangeUrl";
-
+import DeleteCategoryModal from './DeleteCategoryModal';
+import DropdownAction from "@/components/commons/DropdownAction";
 
 const Category = () => {
     const { push, query } = useRouter();
@@ -43,31 +34,17 @@ const Category = () => {
 
                 case "actions":
                     return (
-                        <Dropdown>
-                            <DropdownTrigger>
-                                <Button isIconOnly size="sm" variant="light" aria-label="More options">
-                                    <CiMenuKebab className="text-default-700" />
-                                </Button>
-                            </DropdownTrigger>
 
-                            <DropdownMenu aria-label="Category actions">
-                                <DropdownItem key="detail-category-button" onPress={() => push(`/admin/category/${category._id}`)} >
-                                    Detail Category
-                                </DropdownItem>
-
-                                <DropdownItem key="delete-category" className="text-danger-500"
-                                    onPress={() => {
-                                        setSelectedId({
-                                            _id: category._id as string,
-                                            icon: category.icon as string | undefined
-                                        });
-                                        deleteCategoryModal.onOpen();
-                                    }}
-                                >
-                                    Delete
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
+                        <DropdownAction
+                            onPressDetail={() => push(`/admin/category/${category._id}`)}
+                            onPressDelete={() => {
+                                setSelectedId({
+                                    _id: category._id as string,
+                                    icon: category.icon as string | undefined
+                                });
+                                deleteCategoryModal.onOpen();
+                            }}
+                        />
                     );
 
                 default:

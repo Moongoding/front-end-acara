@@ -9,7 +9,7 @@ export const getFriendlyErrorMessage = (error: unknown): string => {
 
         switch (status) {
             case 400:
-                return "Invalid data. Please double check your information.";
+                return "Invalid data Or The event name is already in use.";
             case 401:
                 return "You do not have authorization. Please log in again.";
             case 403:

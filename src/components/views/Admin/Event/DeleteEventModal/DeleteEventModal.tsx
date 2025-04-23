@@ -1,44 +1,51 @@
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@nextui-org/react";
 import { Dispatch, SetStateAction, useEffect } from "react";
-import useDeleteCategoryModal from "./useDeleteCategoryModal";
+import useDeleteEventModal from "./useDeleteEventModal";
 
 
 interface PropTypes {
     isOpen?: boolean;
     onClose: () => void;
-    refetchCategory: () => void;
+    refetchEvent: () => void;
     onOpenChange: () => void;
-    selectedCategory: {
+    selectedEvent: {
         _id: string;
-        icon?: string;
+        banner?: string;
     } | null;
-    setSelectedCategory: Dispatch<SetStateAction<{ _id: string; icon?: string } | null>>;
+    setSelectedEvent: Dispatch<SetStateAction<{ _id: string; banner?: string } | null>>;
 
 }
 
-const DeleteCategoryModal = (props: PropTypes) => {
-    const { isOpen, onOpenChange, onClose, refetchCategory, selectedCategory, setSelectedCategory, } = props;
+const DeleteEventModal = (props: PropTypes) => {
+    const { isOpen,
+        onOpenChange,
+        onClose,
+        refetchEvent,
+        selectedEvent,
+        setSelectedEvent,
+    } = props;
 
     const {
-        mutateDeleteCategory,
-        isPendingDeleteCategory,
-        isSuccessDeleteCategory,
-    } = useDeleteCategoryModal();
+        mutateDeleteEvent,
+        isPendingDeleteEvent,
+        isSuccessDeleteEvent,
+    } = useDeleteEventModal();
 
     useEffect(() => {
-        if (isSuccessDeleteCategory) {
+        if (isSuccessDeleteEvent) {
             onClose();
-            refetchCategory();
-            setSelectedCategory(null);
+            refetchEvent();
+            setSelectedEvent(null);
         }
-    }, [isSuccessDeleteCategory, onClose, refetchCategory]);
+    }, [isSuccessDeleteEvent, onClose, refetchEvent]);
+
 
     const handleDelete = () => {
-        if (!selectedCategory?._id) return;
+        if (!selectedEvent?._id) return;
 
-        mutateDeleteCategory({
-            id: selectedCategory._id,
-            iconUrl: selectedCategory.icon || "",
+        mutateDeleteEvent({
+            id: selectedEvent._id,
+            bannerUrl: selectedEvent.banner || "",
         });
     };
 
@@ -50,9 +57,9 @@ const DeleteCategoryModal = (props: PropTypes) => {
             scrollBehavior="inside">
 
             <ModalContent className="mb-4">
-                <ModalHeader>Delete Category</ModalHeader>
+                <ModalHeader>Delete Event</ModalHeader>
                 <ModalBody>
-                    <p className="text-medium font-bold">Are you sure to Delete this category ?</p>
+                    <p className="text-medium font-bold">Are you sure to Delete this Event ?</p>
                 </ModalBody>
 
                 <ModalFooter>
@@ -62,11 +69,11 @@ const DeleteCategoryModal = (props: PropTypes) => {
                         onPress={() => {
                             onClose();
                             // setSelectedId("");
-                            setSelectedCategory(null);
+                            setSelectedEvent(null);
                         }}
-                        disabled={isPendingDeleteCategory}
+                        disabled={isPendingDeleteEvent}
                     >
-                        {isPendingDeleteCategory ? (
+                        {isPendingDeleteEvent ? (
                             <Spinner size="sm" color="primary" />
                         ) : ("Cancel")}
                     </Button>
@@ -74,14 +81,14 @@ const DeleteCategoryModal = (props: PropTypes) => {
                     <Button
                         color="danger"
                         type="submit"
-                        disabled={isPendingDeleteCategory}
+                        disabled={isPendingDeleteEvent}
                         // onPress={() => mutateDeleteCategory(selectedId)}
                         onPress={handleDelete}
                     >
 
-                        {isPendingDeleteCategory ? (
+                        {isPendingDeleteEvent ? (
                             <Spinner size="sm" color="primary" />
-                        ) : ("Delete Category")}
+                        ) : ("Delete Event")}
                     </Button>
 
                 </ModalFooter>
@@ -91,4 +98,4 @@ const DeleteCategoryModal = (props: PropTypes) => {
     );
 };
 
-export default DeleteCategoryModal
+export default DeleteEventModal

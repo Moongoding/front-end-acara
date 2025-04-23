@@ -44,14 +44,8 @@ const AddCategoryModal = (props: PropTypes) => {
     const disabledSubmit = isPendingAddCategory || isPendingUploadFile || isPendingDeleteFile
 
     return (
-        <Modal
-            onClose={() => handleCancel(onClose)}
-            onOpenChange={onOpenChange}
-            isOpen={isOpen}
-            placement="center"
-            scrollBehavior="inside">
-            <form onSubmit={handleSubmitForm
-                (handleAddCategory)}>
+        <Modal onClose={() => handleCancel(onClose)} onOpenChange={onOpenChange} isOpen={isOpen} placement="center" scrollBehavior="inside">
+            <form onSubmit={handleSubmitForm(handleAddCategory)}>
                 <ModalContent className="mb-4">
                     <ModalHeader>Add Category</ModalHeader>
                     <ModalBody>

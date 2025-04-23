@@ -5,6 +5,7 @@
       "dom.iterable",
       "esnext",
     ],
+    "baseUrl": ".",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -30,7 +31,9 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "src/components/views/Admin/Category/AddCategoryModal/AddCategoryModal.text",
+    "src/components/views/Admin/Category/AddCategoryModal/useAddCategoryModal copy.text"
   ],
   "exclude": [
     "node_modules"

@@ -1,20 +1,16 @@
-// 🔁 Import External Libraries
-import { useContext } from 'react';
-import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { useMutation } from '@tanstack/react-query';
-
-// 🔁 Import Internal Resources
-import { ToasterContext } from "@/contexts/ToasterContexts";
-import useMediaHandling from '@/hooks/useMediaHandling';
 import categoryServices from '@/services/category.Services';
-import { handleApiError } from '@/utils/handleApiError';
-import { getFriendlyErrorMessage } from '@/utils/errorMessage';
 import { ICategory } from '@/types/Category';
+import { getFriendlyErrorMessage } from '@/utils/errorMessage';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useMutation } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { ToasterContext } from "@/contexts/ToasterContexts";
+import { useContext } from 'react';
+import useMediaHandling from '@/hooks/useMediaHandling';
+import { handleApiError } from '@/utils/handleApiError';
+import { useRouter } from 'next/router';
 
-// 🧠 Yup Validation Schema
 const schema = yup.object().shape({
     name: yup.string().required("Please input name"),
     description: yup.string().required("Please input description"),
@@ -24,12 +20,11 @@ const schema = yup.object().shape({
 const useAddCategoryModal = () => {
     const router = useRouter();
     const { showToaster } = useContext(ToasterContext);
-
     const {
+        mutateUploadFile,
         isPendingUploadFile,
-        isPendingDeleteFile,
-        handleDeleteFile,
-        handleUploadFile,
+        mutateDeleteFile,
+        isPendingDeleteFile
     } = useMediaHandling();
 
     const {
@@ -45,40 +40,60 @@ const useAddCategoryModal = () => {
     });
 
     const preview = watch("icon");
-    const fileUrl = getValues("icon");
 
-    // 🔼 Upload Icon Handler
+
     const handleUploadIcon = (
         files: FileList,
         onChange: (files: FileList | undefined) => void
     ) => {
         if (files.length === 0) return;
 
-        handleUploadFile(
-            files,
-            onChange,
-            (fileUrl: string | undefined) => {
-                if (fileUrl) {
-                    setValue("icon", fileUrl); // set value form
-                }
-            },
-            typeof fileUrl === "string" ? fileUrl : undefined
-        )
+        const existingIcon = getValues("icon");
+
+        // Jika sudah ada icon sebelumnya, hapus terlebih dahulu
+        if (typeof existingIcon === "string") {
+            mutateDeleteFile({
+                fileUrl: existingIcon,
+                callback: () => {
+                    uploadNewIcon(files, onChange); // baru upload setelah delete
+                },
+            });
+        } else {
+            uploadNewIcon(files, onChange); // langsung upload jika belum ada
+        }
     };
 
-    // 🗑️ Delete Icon Handler
+    const uploadNewIcon = (
+        files: FileList,
+        onChange: (files: FileList | undefined) => void
+    ) => {
+        onChange(files); // untuk preview sementara
+
+        mutateUploadFile({
+            file: files[0],
+            callback: (fileUrl: string) => {
+                setValue("icon", fileUrl); // set value form
+            },
+        });
+    };
+
     const handleDeleteIcon = (
         onChange: (files: FileList | undefined) => void
     ) => {
-        handleDeleteFile(fileUrl, () => onChange(undefined))
+        const fileUrl = getValues("icon");
+        if (typeof fileUrl === "string") {
+            mutateDeleteFile({ fileUrl, callback: () => onChange(undefined) });
+        }
     };
 
-    // ❌ Cancel & Reset Handler
     const handleCancel = (onClose: () => void) => {
+        const fileUrl = getValues("icon");
         if (typeof fileUrl === "string") {
-            handleDeleteFile(fileUrl, () => {
-                reset();
-                onClose();
+            mutateDeleteFile({
+                fileUrl, callback: () => {
+                    reset();
+                    onClose();
+                }
             });
         } else {
             reset();
@@ -86,49 +101,44 @@ const useAddCategoryModal = () => {
         }
     };
 
-    // ➕ Add Category API
     const addCategory = async (payload: ICategory) => {
         const res = await categoryServices.addCategory(payload);
         return res;
     };
 
-    // 🔁 Add Category Mutation
-    const {
-        mutate: mutateAddCategory,
-        isPending: isPendingAddCategory,
-        isSuccess: isSuccessAddCategory
-    } = useMutation({
+
+
+    const { mutate: mutateAddCategory, isPending: isPendingAddCategory, isSuccess: isSuccessAddCategory } = useMutation({
         mutationFn: addCategory,
+        // onError: (error) => {
+        //     const friendlyMessage = getFriendlyErrorMessage(error);
+        //     showToaster({ type: "error", message: friendlyMessage });
+        // },
         onError: (error) => handleApiError(error, showToaster, router),
         onSuccess: () => {
             showToaster({ type: "success", message: "Success add category" });
+
             reset();
         },
     });
 
-    // 📩 Submit Handler
+
     const handleAddCategory = (data: ICategory) => mutateAddCategory(data);
 
     return {
-        // Form
         control,
         errors,
         reset,
         handleSubmitForm,
-
-        // Submission
         handleAddCategory,
         isPendingAddCategory,
         isSuccessAddCategory,
 
-        // Icon Upload
         preview,
         handleUploadIcon,
         isPendingUploadFile,
         handleDeleteIcon,
         isPendingDeleteFile,
-
-        // Misc
         handleCancel
     }
 };

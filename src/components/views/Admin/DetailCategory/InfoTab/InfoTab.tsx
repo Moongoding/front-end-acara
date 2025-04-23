@@ -1,9 +1,8 @@
 import { ICategory } from "@/types/Category";
 import { Button, Card, CardBody, CardHeader, Input, Skeleton, Spinner, Textarea } from "@nextui-org/react"
-import useIconTab from "../IconTab/useIconTab";
 import useInfoTab from "./useInfoTab";
-import { Controller } from "react-hook-form";
-import { useEffect } from "react";
+import { Controller, useWatch } from "react-hook-form";
+import { useEffect, useMemo } from "react";
 
 interface PropTypes {
     dataCategory: ICategory,
@@ -22,7 +21,19 @@ const InfoTab = (props: PropTypes) => {
         setValueinfo
     } = useInfoTab();
 
-    const disabledSubmit = isPendingUpdate || !dataCategory?._id
+    const watchedFields = useWatch({
+        control: controlUpdateinfo,
+        name: ['name', 'description']
+    });
+
+    const isFormChanged = useMemo(() => {
+        return (
+            watchedFields[0] !== dataCategory?.name ||
+            watchedFields[1] !== dataCategory?.description
+        );
+    }, [watchedFields, dataCategory]);
+
+    const disabledSubmit = isPendingUpdate || !dataCategory?._id;
 
     useEffect(() => {
         setValueinfo('name', `${dataCategory?.name}`);
@@ -34,6 +45,9 @@ const InfoTab = (props: PropTypes) => {
             resetUpdateinfo();
         }
     }, [isSuccessUpdate])
+
+
+
 
     return (
         <Card className="w-full p-4 lg:w-1/2">
@@ -84,7 +98,7 @@ const InfoTab = (props: PropTypes) => {
                         color="danger"
                         type="submit"
                         className="mt-2 disabled:bg-default-500"
-                        disabled={disabledSubmit}>
+                        disabled={disabledSubmit || !isFormChanged}>
 
                         {disabledSubmit ? (
                             <Spinner size="sm" color="primary" />

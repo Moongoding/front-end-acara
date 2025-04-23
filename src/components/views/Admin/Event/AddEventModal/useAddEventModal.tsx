@@ -1,0 +1,202 @@
+// 🔁 Import External Libraries
+import { useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { DateValue } from '@nextui-org/react';
+
+// 🔁 Import Internal Resources
+import { ToasterContext } from "@/contexts/ToasterContexts";
+import useMediaHandling from '@/hooks/useMediaHandling';
+import eventServices from '@/services/event.Services';
+import { handleApiError } from '@/utils/handleApiError';
+import categoryServices from '@/services/category.Services';
+import { IEvent, IEventForm } from '@/types/Event';
+import useDoubounce from '@/hooks/useDebounce';
+import { DELAY } from '@/constants/list.constants';
+import { toDateStandard } from '@/utils/date';
+import { getLocalTimeZone, now } from '@internationalized/date';
+// import { IEvent } from '@/types/Event';
+
+// 🧠 Yup Validation Schema
+const schema = yup.object().shape({
+    banner: yup.mixed<FileList | string>().required("Please input the banner"),
+    category: yup.string().required("Please Select Category"),
+    endDate: yup.mixed<DateValue>().required("Please Select End Date"),
+    name: yup.string().required("Please input name"),
+    slug: yup.string().required("Please input slug"),
+    startDate: yup.mixed<DateValue>().required("Please Select Start Date"),
+    isPublish: yup.string().required("Please Select Status"),
+    isFeatured: yup.string().required("Please Select Featured"),
+    description: yup.string().required("Please Input Description"),
+    isOnline: yup.string().required("Please select Online or Offline"),
+    latitude: yup.string().required("Please input latutude coordinate"),
+    longitude: yup.string().required("Please input longitude coordinate"),
+    region: yup.string().required("Please select Region"),
+});
+
+const useAddEventModal = () => {
+    const router = useRouter();
+    const { showToaster } = useContext(ToasterContext);
+    const debounce = useDoubounce();
+    const [searchRegency, setSearchRegency] = useState("");
+
+    const {
+        handleDeleteFile,
+        isPendingUploadFile,
+        handleUploadFile,
+        isPendingDeleteFile
+    } = useMediaHandling();
+
+    const {
+        control,
+        handleSubmit: handleSubmitForm,
+        formState: { errors },
+        reset,
+        watch,
+        getValues,
+        setValue,
+    } = useForm({
+        resolver: yupResolver(schema),
+    });
+
+    const preview = watch("banner");
+    const fileUrl = getValues("banner");
+    useEffect(() => {
+        setValue('startDate', now(getLocalTimeZone()));
+        setValue('endDate', now(getLocalTimeZone()));
+    }, [setValue]);
+    // setValue('startDate', now(getLocalTimeZone()))
+    // setValue('endDate', now(getLocalTimeZone()))
+
+    // 🔼 Upload Banner Handler
+    const handleUploadBanner = (
+        files: FileList,
+        onChange: (files: FileList | undefined) => void
+    ) => {
+        if (files.length === 0) return;
+
+        handleUploadFile(
+            files,
+            onChange,
+            (fileUrl: string | undefined) => {
+                if (fileUrl) {
+                    setValue("banner", fileUrl); // set value form
+                }
+            },
+            typeof fileUrl === "string" ? fileUrl : undefined
+        )
+    };
+
+    // 🗑️ Delete Banner Handler
+    const handleDeleteBanner = (
+        onChange: (files: FileList | undefined) => void
+    ) => {
+        handleDeleteFile(fileUrl, () => onChange(undefined))
+    };
+
+    // ❌ Cancel & Reset Handler
+    const handleCancel = (onClose: () => void) => {
+        if (typeof fileUrl === "string") {
+            handleDeleteFile(fileUrl, () => {
+                reset();
+                onClose();
+            });
+        } else {
+            reset();
+            onClose();
+        }
+    };
+
+    // Get Data Category API
+    const {
+        data: dataCategory,
+    } = useQuery({
+        queryKey: ["Categories"],
+        queryFn: () => categoryServices.getCategories(),
+        enabled: router.isReady,
+    });
+
+    // Get Data Region API
+
+    const {
+        data: dataRegion,
+        isPending: isPendingRegion,
+    } = useQuery({
+        queryKey: ["region", searchRegency],
+        queryFn: () => eventServices.locationByRegency(`${searchRegency}`),
+        enabled: searchRegency !== "",
+    })
+
+    // ➕ Add Event API
+    const addEvent = async (payload: IEvent) => {
+        const res = await eventServices.addEvent(payload);
+        return res;
+    };
+
+    // 🔁 Add Event  Mutation
+    const { mutate: mutateAddEvent, isPending: isPendingAddEvent, isSuccess: isSuccessAddEvent } = useMutation({
+        mutationFn: addEvent,
+        onError: (error) => handleApiError(error, showToaster, router),
+        onSuccess: () => {
+            showToaster({ type: "success", message: "Success add Event" });
+            reset();
+        },
+    });
+
+    // 📩 Submit Handler
+    const handleAddEvent = (data: IEventForm) => {
+        const payload = {
+            ...data,
+            isFeatured: Boolean(data.isFeatured),
+            isPublish: Boolean(data.isPublish),
+            isOnline: Boolean(data.isOnline),
+            startDate: toDateStandard(data.startDate),
+            endDate: toDateStandard(data.endDate),
+            location: {
+                region: data.region,
+                coordinates: [Number(data.latitude), Number(data.longitude)]
+            },
+            banner: data.banner
+        };
+        mutateAddEvent(payload)
+    };
+
+    // Search Region Handler
+    const handleSearchRegion = (region: string) => {
+        debounce(() => setSearchRegency(region), 50);
+    }
+
+
+    return {
+        // Form
+        control,
+        errors,
+        reset,
+        handleSubmitForm,
+        dataCategory,
+        dataRegion,
+        searchRegency,
+
+        // Submission
+        handleAddEvent,
+        isPendingAddEvent,
+        isSuccessAddEvent,
+
+        // Banner Upload
+        preview,
+        handleUploadBanner,
+        isPendingUploadFile,
+        handleDeleteBanner,
+        isPendingDeleteFile,
+
+        // Misc
+        handleCancel,
+        handleSearchRegion,
+        isPendingRegion
+    }
+};
+
+export default useAddEventModal;

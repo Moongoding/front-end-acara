@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import { getFriendlyErrorMessage } from "./errorMessage";
 import { IToasterState } from "@/contexts/ToasterContexts";
 import { NextRouter } from "next/router"; // ✅ pakai NextRouter tipe router
+import { signOut } from "next-auth/react";
 
 export const handleApiError = async (
     error: unknown,
@@ -18,13 +19,13 @@ export const handleApiError = async (
             message: friendlyMessage,
         });
 
-        // await signOut({ callbackUrl: "/auth/login" });
-        // return;
-
         const currentUrl = router.asPath;
-        router.push(
-            `/auth/login?sessionExpired=true&callbackUrl=${encodeURIComponent(currentUrl)}`
-        );
+        await signOut({ callbackUrl: `/auth/login?sessionExpired=true&callbackUrl=${encodeURIComponent(currentUrl)}` });
+        return;
+
+        // router.push(
+        //     `/auth/login?sessionExpired=true&callbackUrl=${encodeURIComponent(currentUrl)}`
+        // );
         return;
     }
 
