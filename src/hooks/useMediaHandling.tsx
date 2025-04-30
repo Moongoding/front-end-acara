@@ -80,6 +80,7 @@ const useMediaHandling = () => {
     ) => {
         if (files.length === 0) return;
 
+
         const uploadFile = () => {
             const file = files[0];
             const errorMessage = validateImageFile(file);
@@ -101,6 +102,7 @@ const useMediaHandling = () => {
         } else {
             uploadFile();
         }
+
     };
 
     // ✅ 7. Handler untuk menghapus file

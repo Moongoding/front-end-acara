@@ -1,7 +1,6 @@
 
 import { ToasterContext } from "@/contexts/ToasterContexts";
 import categoryServices from "@/services/category.Services";
-import { getFriendlyErrorMessage } from "@/utils/errorMessage";
 import { useMutation } from "@tanstack/react-query";
 import { useContext } from "react";
 import useMediaHandling from "@/hooks/useMediaHandling";

@@ -15,7 +15,6 @@ import { handleApiError } from '@/utils/handleApiError';
 import categoryServices from '@/services/category.Services';
 import { IEvent, IEventForm } from '@/types/Event';
 import useDoubounce from '@/hooks/useDebounce';
-import { DELAY } from '@/constants/list.constants';
 import { toDateStandard } from '@/utils/date';
 import { getLocalTimeZone, now } from '@internationalized/date';
 // import { IEvent } from '@/types/Event';
@@ -77,7 +76,9 @@ const useAddEventModal = () => {
         onChange: (files: FileList | undefined) => void
     ) => {
         if (files.length === 0) return;
+        const currentFileUrl = getValues("banner");
 
+        console.log("ini adalah file url yang ada sebelumnya:", currentFileUrl);
         handleUploadFile(
             files,
             onChange,
@@ -86,7 +87,8 @@ const useAddEventModal = () => {
                     setValue("banner", fileUrl); // set value form
                 }
             },
-            typeof fileUrl === "string" ? fileUrl : undefined
+            // typeof fileUrl === "string" ? fileUrl : undefined
+            typeof currentFileUrl === "string" ? currentFileUrl : undefined
         )
     };
 
@@ -120,7 +122,6 @@ const useAddEventModal = () => {
     });
 
     // Get Data Region API
-
     const {
         data: dataRegion,
         isPending: isPendingRegion,
@@ -150,13 +151,16 @@ const useAddEventModal = () => {
     const handleAddEvent = (data: IEventForm) => {
         const payload = {
             ...data,
-            isFeatured: Boolean(data.isFeatured),
-            isPublish: Boolean(data.isPublish),
-            isOnline: Boolean(data.isOnline),
-            startDate: toDateStandard(data.startDate),
-            endDate: toDateStandard(data.endDate),
+            // isFeatured: Boolean(data.isFeatured),
+            // isPublish: Boolean(data.isPublish),
+            // isOnline: Boolean(data.isOnline),
+            isFeatured: data.isFeatured === "true",
+            isPublish: data.isPublish === "true",
+            isOnline: data.isOnline === "true",
+            startDate: data.startDate ? toDateStandard(data.startDate) : '',
+            endDate: data.endDate ? toDateStandard(data.endDate) : '',
             location: {
-                region: data.region,
+                region: `${data.region}`,
                 coordinates: [Number(data.latitude), Number(data.longitude)]
             },
             banner: data.banner

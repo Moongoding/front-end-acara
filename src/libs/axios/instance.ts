@@ -10,7 +10,7 @@ const headers = {
 const instance = axios.create({
   baseURL: environment.API_URL,
   headers,
-  timeout: 60 * 1000,
+  timeout: 60 * 100,
 });
 console.log("Base URL Axios:", process.env.NEXT_PUBLIC_API_URL);
 console.log("Base URL Axios:", environment.API_URL);

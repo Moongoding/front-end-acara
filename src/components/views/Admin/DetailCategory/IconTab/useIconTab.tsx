@@ -1,7 +1,6 @@
-import { ToasterContext } from "@/contexts/ToasterContexts";
+
 import useMediaHandling from "@/hooks/useMediaHandling";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
@@ -12,9 +11,6 @@ const schemaUpdateIcon = yup.object().shape({
 });
 
 const useIconTab = () => {
-
-    const { showToaster } = useContext(ToasterContext);
-
     const {
         mutateUploadFile,
         isPendingUploadFile,
@@ -71,6 +67,8 @@ const useIconTab = () => {
             },
         });
     };
+
+
 
 
     const handleDeleteIcon = (

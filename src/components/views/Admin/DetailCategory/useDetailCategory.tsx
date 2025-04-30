@@ -1,12 +1,13 @@
 import { ToasterContext } from "@/contexts/ToasterContexts";
 import categoryServices from "@/services/category.Services";
 import { ICategory } from "@/types/Category";
-import { getFriendlyErrorMessage } from "@/utils/errorMessage";
+import { handleApiError } from "@/utils/handleApiError";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 
 const useDetailCategory = () => {
+    const router = useRouter();
     const { query, isReady } = useRouter();
     const { showToaster } = useContext(ToasterContext);
 
@@ -33,10 +34,11 @@ const useDetailCategory = () => {
         isSuccess: isSuccessUpdateCategory
     } = useMutation({
         mutationFn: (payload: ICategory) => updateCategory(payload),
-        onError: (error) => {
-            const friendlyMessage = getFriendlyErrorMessage(error);
-            showToaster({ type: "error", message: friendlyMessage });
-        },
+        // onError: (error) => {
+        //     const friendlyMessage = getFriendlyErrorMessage(error);
+        //     showToaster({ type: "error", message: friendlyMessage });
+        // },
+        onError: (error) => handleApiError(error, showToaster, router),
         onSuccess: () => {
             refetchCategory();
             showToaster({ type: "success", message: "Success Update category" });

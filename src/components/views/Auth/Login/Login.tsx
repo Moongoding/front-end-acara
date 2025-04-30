@@ -12,7 +12,6 @@ import Link from "next/link";
 import useLogin from "./useLogin";
 import { Controller } from "react-hook-form";
 import { cn } from "@/utils/cn";
-import { object } from "yup";
 
 const Login = () => {
   const {

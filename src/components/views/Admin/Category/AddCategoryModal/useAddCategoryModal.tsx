@@ -11,7 +11,6 @@ import { ToasterContext } from "@/contexts/ToasterContexts";
 import useMediaHandling from '@/hooks/useMediaHandling';
 import categoryServices from '@/services/category.Services';
 import { handleApiError } from '@/utils/handleApiError';
-import { getFriendlyErrorMessage } from '@/utils/errorMessage';
 import { ICategory } from '@/types/Category';
 
 // 🧠 Yup Validation Schema
@@ -53,6 +52,9 @@ const useAddCategoryModal = () => {
         onChange: (files: FileList | undefined) => void
     ) => {
         if (files.length === 0) return;
+        const currentFileUrl = getValues("icon");
+
+        console.log("ini adalah file url yang ada sebelumnya:", currentFileUrl);
 
         handleUploadFile(
             files,
@@ -62,7 +64,8 @@ const useAddCategoryModal = () => {
                     setValue("icon", fileUrl); // set value form
                 }
             },
-            typeof fileUrl === "string" ? fileUrl : undefined
+            // typeof fileUrl === "string" ? fileUrl : undefined
+            typeof currentFileUrl === "string" ? currentFileUrl : undefined
         )
     };
 

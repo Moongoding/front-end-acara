@@ -6,6 +6,7 @@ interface IRegency {
 }
 
 interface IEvent {
+    _id?: string;
     name?: string;
     slug?: string;
     category?: string;
@@ -23,11 +24,11 @@ interface IEvent {
 }
 
 interface IEventForm extends IEvent {
-    region: string;
-    startDate: DateValue;
-    endDate: DateValue;
-    latitude: string;
-    longitude: string;
+    region?: string;
+    startDate?: DateValue;
+    endDate?: DateValue;
+    latitude?: string;
+    longitude?: string;
 }
 
 

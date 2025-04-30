@@ -116,7 +116,6 @@ const AddCategoryModal = (props: PropTypes) => {
                         </Button>
 
                     </ModalFooter>
-
                 </ModalContent>
             </form>
         </Modal >

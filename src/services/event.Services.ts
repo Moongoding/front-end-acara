@@ -14,10 +14,11 @@ const eventServices = {
         instance.get(`${endpoint.REGION}-search?name=${name}`),
 
     deleteEvent: (id: string) => instance.delete(`${endpoint.EVENT}/${id}`),
-    // getCategoryById: (id: string) => instance.get(`${endpoint.CATEGORY}/${id}`),
+    getEventById: (id: string) => instance.get(`${endpoint.EVENT}/${id}`),
 
+    updateEvent: (id: string, payload: IEvent) => instance.put(`${endpoint.EVENT}/${id}`, payload),
 
-    // updateCategory: (id: string, payload: ICategory) => instance.put(`${endpoint.CATEGORY}/${id}`, payload),
+    getRegencyById: (id: string) => instance.get(`${endpoint.REGION}/${id}/regency`)
 };
 
 export default eventServices;
