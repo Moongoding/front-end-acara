@@ -1,7 +1,7 @@
 import { IEvent, IEventForm, IRegency } from "@/types/Event";
 import { Autocomplete, AutocompleteItem, Button, Card, CardBody, CardHeader, DatePicker, Input, Select, SelectItem, Skeleton, Spinner, Textarea } from "@nextui-org/react"
 import useLocationTab from "./useLocationTab";
-import { Controller, useWatch } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { useEffect, useMemo } from "react";
 
 interface PropTypes {
@@ -40,13 +40,11 @@ const LocationTab = (props: PropTypes) => {
     });
 
     const isFormChanged = useMemo(() => {
-        const watchedLatitude = parseFloat(watchedFields[1]);
-        const watchedLongitude = parseFloat(watchedFields[2]);
         return (
-            watchedFields[0] !== dataEvent?.isOnline ||
-            watchedLatitude !== dataEvent?.location?.coordinates[0] ||
-            watchedLongitude !== dataEvent?.location?.coordinates[1] ||
-            watchedFields[3] !== dataEvent?.region
+            watchedFields[0] !== `${dataEvent?.isOnline}` ||
+            watchedFields[1] !== `${dataEvent?.location?.coordinates[0]}` ||
+            watchedFields[2] !== `${dataEvent?.location?.coordinates[1]}` ||
+            watchedFields[3] !== `${dataEvent?.location?.region}`
         );
     }, [watchedFields, dataEvent]);
 
@@ -71,7 +69,6 @@ const LocationTab = (props: PropTypes) => {
             });
         }
     }, [isSuccessUpdate, dataEvent]);
-
 
 
     return (
@@ -115,7 +112,7 @@ const LocationTab = (props: PropTypes) => {
                             control={controlUpdateLocation}
                             render={({ field }) => (
                                 <Input {...field}
-                                    type="Number"
+                                    type="number"
                                     label="Latitude"
                                     labelPlacement="outside"
                                     variant="bordered"
@@ -132,7 +129,7 @@ const LocationTab = (props: PropTypes) => {
                             control={controlUpdateLocation}
                             render={({ field }) => (
                                 <Input {...field}
-                                    type="Number"
+                                    type="number"
                                     label="Longitude"
                                     labelPlacement="outside"
                                     variant="bordered"

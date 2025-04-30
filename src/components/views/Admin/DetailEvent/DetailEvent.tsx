@@ -16,7 +16,7 @@ const DetailEvent = () => {
         dataRegionById,
 
     } = useDetailEvent();
-    console.log("handle nya:", handleUpdateInfo);
+
     return (
         <Tabs aria-label="Options">
             <Tab key="benner" title="Benner">
