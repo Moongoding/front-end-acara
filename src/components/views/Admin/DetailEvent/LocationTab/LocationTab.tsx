@@ -40,10 +40,12 @@ const LocationTab = (props: PropTypes) => {
     });
 
     const isFormChanged = useMemo(() => {
+        const watchedLatitude = parseFloat(watchedFields[1]);
+        const watchedLongitude = parseFloat(watchedFields[2]);
         return (
             watchedFields[0] !== dataEvent?.isOnline ||
-            watchedFields[1] !== dataEvent?.latitude ||
-            watchedFields[2] !== dataEvent?.longitude ||
+            watchedLatitude !== dataEvent?.location?.coordinates[0] ||
+            watchedLongitude !== dataEvent?.location?.coordinates[1] ||
             watchedFields[3] !== dataEvent?.region
         );
     }, [watchedFields, dataEvent]);
