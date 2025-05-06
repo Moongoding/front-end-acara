@@ -25,7 +25,7 @@ const DashboardSidebar = (props: PropTypes) => {
   const router = useRouter();
   return (
     <div className={cn(
-      "fixed z-50 flex h-screen w-full max-w-[300px] -translate-x-full flex-col justify-between border-r border-default-200 bg-white px-4 py-6 transition-all lg:relative lg:translate-x-0",
+      "fixed z-50 flex h-screen w-full max-w-[300px] -translate-x-full flex-col justify-between border-r border-default-200 bg-white px-4 py-6 transition-all overflow-y-auto lg:relative lg:translate-x-0",
       { "translate-x-0": isOpen }
     )}>
       <div>
@@ -66,7 +66,7 @@ const DashboardSidebar = (props: PropTypes) => {
           )}
         </Listbox>
       </div>
-      <div className="flex items-center p-1">
+      <div className="flex items-center p-1 pb-6">
         <Button
           color="danger"
           fullWidth
