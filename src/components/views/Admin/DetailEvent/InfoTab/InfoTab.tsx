@@ -1,10 +1,9 @@
-import { IEvent, IEventForm } from "@/types/Event";
+import { IEventForm } from "@/types/Event";
 import { Autocomplete, AutocompleteItem, Button, Card, CardBody, CardHeader, DatePicker, Input, Select, SelectItem, Skeleton, Spinner, Textarea } from "@nextui-org/react"
 import useInfoTab from "./useInfoTab";
 import { Controller, useWatch } from "react-hook-form";
 import { useEffect, useMemo } from "react";
 import { ICategory } from "@/types/Category";
-import { getLocalTimeZone, now } from "@internationalized/date";
 import { toInputDate } from "@/utils/date";
 
 interface PropTypes {

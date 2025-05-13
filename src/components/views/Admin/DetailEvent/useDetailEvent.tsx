@@ -2,12 +2,10 @@ import { ToasterContext } from "@/contexts/ToasterContexts";
 import eventServices from "@/services/event.Services";
 import { IEvent, IEventForm } from "@/types/Event";
 import { toDateStandard } from "@/utils/date";
-import { getFriendlyErrorMessage } from "@/utils/errorMessage";
 import { handleApiError } from "@/utils/handleApiError";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import { boolean, number } from "yup";
 
 const useDetailEvent = () => {
     const router = useRouter();
@@ -74,6 +72,7 @@ const useDetailEvent = () => {
         const payload = {
             isOnline: Boolean(data.isOnline),
             location: {
+                address: `${data.address}`,
                 region: `${data.region}`,
                 coordinates: [Number(data.latitude), Number(data.longitude)]
             },

@@ -1,7 +1,7 @@
-import { IEvent, IEventForm, IRegency } from "@/types/Event";
+import { IEventForm, IRegency } from "@/types/Event";
 import { Autocomplete, AutocompleteItem, Button, Card, CardBody, CardHeader, DatePicker, Input, Select, SelectItem, Skeleton, Spinner, Textarea } from "@nextui-org/react"
 import useLocationTab from "./useLocationTab";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import { useEffect, useMemo } from "react";
 
 interface PropTypes {
@@ -36,7 +36,7 @@ const LocationTab = (props: PropTypes) => {
 
     const watchedFields = useWatch({
         control: controlUpdateLocation,
-        name: ['isOnline', 'latitude', 'longitude', 'region']
+        name: ['isOnline', 'latitude', 'longitude', 'region', 'address']
     });
 
     const isFormChanged = useMemo(() => {
@@ -44,7 +44,8 @@ const LocationTab = (props: PropTypes) => {
             watchedFields[0] !== `${dataEvent?.isOnline}` ||
             watchedFields[1] !== `${dataEvent?.location?.coordinates[0]}` ||
             watchedFields[2] !== `${dataEvent?.location?.coordinates[1]}` ||
-            watchedFields[3] !== `${dataEvent?.location?.region}`
+            watchedFields[3] !== `${dataEvent?.location?.region}` ||
+            watchedFields[4] !== `${dataEvent?.location?.address}`
         );
     }, [watchedFields, dataEvent]);
 
@@ -53,6 +54,7 @@ const LocationTab = (props: PropTypes) => {
     useEffect(() => {
         if (dataEvent) {
             setValueLocation('isOnline', `${dataEvent?.isOnline}`);
+            setValueLocation('address', `${dataEvent?.location?.address}`);
             setValueLocation("region", `${dataEvent?.location?.region}`);
             setValueLocation('latitude', `${dataEvent?.location?.coordinates[0]}`);
             setValueLocation('longitude', `${dataEvent?.location?.coordinates[1]}`);
@@ -63,6 +65,7 @@ const LocationTab = (props: PropTypes) => {
         if (isSuccessUpdate && dataEvent) {
             resetUpdateLocation({
                 isOnline: `${dataEvent?.isOnline}`,
+                address: `${dataEvent?.address}`,
                 latitude: `${dataEvent?.location?.coordinates[0]}`,
                 longitude: `${dataEvent?.location?.coordinates[1]}`,
                 region: `${dataEvent?.location?.region}`,
@@ -81,6 +84,23 @@ const LocationTab = (props: PropTypes) => {
             <CardBody>
                 <form className="flex flex-col gap-4"
                     onSubmit={handleSubmitLocation(onUpdate)}>
+
+                    <Skeleton isLoaded={!!dataEvent?.location?.address} className="rounded-lg">
+                        <Controller
+                            name="address"
+                            control={controlUpdateLocation}
+                            render={({ field }) => (
+                                <Input {...field}
+                                    type="text"
+                                    label="Address"
+                                    labelPlacement="outside"
+                                    variant="bordered"
+                                    isInvalid={errorsUpdateLocation.address !== undefined}
+                                    errorMessage={errorsUpdateLocation.address?.message}
+                                    className="mt-2"
+                                />
+                            )} />
+                    </Skeleton>
 
                     <Skeleton isLoaded={!!dataEvent} className="rounded-lg">
                         <Controller

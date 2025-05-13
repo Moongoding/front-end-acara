@@ -4,7 +4,6 @@ import { DateValue } from "@nextui-org/react";
 import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import useAddEventModal from "../../Event/AddEventModal/useAddEventModal";
 import { useRouter } from "next/router";
 
 const useInfoTab = () => {
