@@ -24,7 +24,9 @@ const useChangeUrl = () => {
 
 
     const setUrl = () => {
+
         const newQuery = {
+            id: String(router.query.id),
             limit: String(currentLimit),
             page: String(currentPage),
             search: currentSearch,

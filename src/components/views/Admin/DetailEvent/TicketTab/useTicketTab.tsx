@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 
 const useTicketTab = () => {
+
     const { query, isReady } = useRouter();
 
     const getTicketByEventId = async () => {
