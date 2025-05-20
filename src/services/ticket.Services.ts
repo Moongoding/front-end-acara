@@ -12,6 +12,8 @@ const ticketServices = {
 
     deleteTicket: (id: string) => instance.delete(`${endpoint.TICKET}/${id}`),
 
+    deleteTicketByEvent: (id: string) => instance.delete(`${endpoint.TICKET}/events/${id}`),
+
     updateTicket: (id: string, payload: ITicket) => instance.put(`${endpoint.TICKET}/${id}`, payload),
 };
 

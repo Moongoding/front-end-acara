@@ -1,6 +1,7 @@
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@nextui-org/react";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import useDeleteEventModal from "./useDeleteEventModal";
+import useDeleteTicketModal from "../../DetailEvent/TicketTab/DeleteTicketModal/useTicketModal";
 
 
 interface PropTypes {
@@ -31,6 +32,11 @@ const DeleteEventModal = (props: PropTypes) => {
         isSuccessDeleteEvent,
     } = useDeleteEventModal();
 
+    const {
+        deleteTicketByevent,
+    } = useDeleteTicketModal();
+
+
     useEffect(() => {
         if (isSuccessDeleteEvent) {
             onClose();
@@ -40,13 +46,26 @@ const DeleteEventModal = (props: PropTypes) => {
     }, [isSuccessDeleteEvent, onClose, refetchEvent]);
 
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (!selectedEvent?._id) return;
 
-        mutateDeleteEvent({
-            id: selectedEvent._id,
-            bannerUrl: selectedEvent.banner || "",
-        });
+        // mutateDeleteEvent({
+        //     id: selectedEvent._id,
+        //     bannerUrl: selectedEvent.banner || "",
+        // });
+
+        try {
+            // Hapus tiket dulu
+            await deleteTicketByevent(`${selectedEvent._id}`);
+            // Baru hapus event
+            await mutateDeleteEvent({
+                id: selectedEvent._id,
+                bannerUrl: selectedEvent.banner || "",
+            });
+
+        } catch (error) {
+            console.error("Gagal menghapus:", error);
+        }
     };
 
     return (

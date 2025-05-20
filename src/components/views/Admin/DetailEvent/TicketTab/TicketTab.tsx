@@ -2,15 +2,19 @@ import DropdownAction from "@/components/commons/DropdownAction";
 import DataTable from "@/components/ui/DataTable";
 import { convertIDR } from "@/utils/currency";
 import { Button, Card, CardBody, CardHeader, useDisclosure } from "@nextui-org/react";
-import { Fragment, Key, ReactNode, useCallback } from "react";
+import { Fragment, Key, ReactNode, useCallback, useState } from "react";
 import { COLUMN_LIST_TICKET } from "./TicketTab.constant";
 import useTicketTab from "./useTicketTab";
 import AddTicketModal from "./AddTicketModal";
+import DeleteTicketModal from "./DeleteTicketModal";
+import { ITicket } from "@/types/Ticket";
 
 const TicketTab = () => {
     const addTicketModal = useDisclosure();
     const deleteTicketModal = useDisclosure();
     const updateTicketModal = useDisclosure();
+
+    const [selectedData, setSelectedData] = useState<ITicket | null>(null);
 
     const {
         dataTicket,
@@ -32,6 +36,7 @@ const TicketTab = () => {
 
                         <DropdownAction
                             onPressDetail={() => {
+                                setSelectedData(ticket as ITicket)
                                 updateTicketModal.onOpen();
                             }}
                             onPressDelete={() => {
@@ -75,7 +80,15 @@ const TicketTab = () => {
                     />
                 </CardBody>
             </Card>
+
             <AddTicketModal {...addTicketModal} refetchTicket={refetchTicket} />
+
+            <DeleteTicketModal
+                {...deleteTicketModal}
+                selectedData={selectedData}
+                setSelectedData={setSelectedData}
+                refetchTicket={refetchTicket}
+            />
         </Fragment>
     );
 }
