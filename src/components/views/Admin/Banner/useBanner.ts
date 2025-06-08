@@ -8,7 +8,7 @@ import { signOut } from "next-auth/react";
 
 const useBanner = () => {
     const router = useRouter();
-    const [selectedId, setSelectedId] = useState<{ _id: string; icon?: string } | null>(null);
+    const [selectedId, setSelectedId] = useState<{ _id: string; image?: string } | null>(null);
 
     const {
         currentLimit,

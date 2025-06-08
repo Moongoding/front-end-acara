@@ -4,11 +4,10 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { Key, ReactNode, useCallback } from "react";
 import { COLUMN_LIST_BANNER } from "./Banner.Constanst";
-import AddCategoryModal from './AddBannerModal';
-import DeleteCategoryModal from './DeleteBannerModal';
 import DropdownAction from "@/components/commons/DropdownAction";
 import useBanner from "./useBanner";
 import AddBannerModal from "./AddBannerModal";
+import DeleteBannerModal from "./DeleteBannerModal/DeleteBannerModal";
 
 const Banner = () => {
     const { push, query } = useRouter();
@@ -46,7 +45,7 @@ const Banner = () => {
                             onPressDelete={() => {
                                 setSelectedId({
                                     _id: banner._id as string,
-                                    icon: banner.icon as string | undefined
+                                    image: banner.image as string | undefined
                                 });
                                 deleteBannerModal.onOpen();
                             }}
@@ -77,12 +76,12 @@ const Banner = () => {
                 )}
                 <AddBannerModal refetchBanner={refetchBanners} {...addBannerModal} />
 
-                {/* <DeleteCategoryModal
+                <DeleteBannerModal
                     {...deleteBannerModal}
-                    selectedCategory={selectedId}
-                    setSelectedCategory={setSelectedId}
-                    refetchCategory={refetchBanners}
-                /> */}
+                    selectedBanner={selectedId}
+                    setSelectedBanner={setSelectedId}
+                    refetchBanner={refetchBanners}
+                />
             </section>
 
             {/* <InputFile name="input" isDropable /> */}

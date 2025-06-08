@@ -1,44 +1,47 @@
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner } from "@nextui-org/react";
 import { Dispatch, SetStateAction, useEffect } from "react";
-import useDeleteCategoryModal from "./useDeleteCategoryModal";
+import useDeleteBannerModal from "./useDeleteBannerModal";
+
 
 
 interface PropTypes {
     isOpen?: boolean;
     onClose: () => void;
-    refetchCategory: () => void;
+    refetchBanner: () => void;
     onOpenChange: () => void;
-    selectedCategory: {
+    selectedBanner: {
         _id: string;
-        icon?: string;
+        image?: string;
     } | null;
-    setSelectedCategory: Dispatch<SetStateAction<{ _id: string; icon?: string } | null>>;
+    setSelectedBanner: Dispatch<SetStateAction<{ _id: string; image?: string } | null>>;
 
 }
 
-const DeleteCategoryModal = (props: PropTypes) => {
-    const { isOpen, onOpenChange, onClose, refetchCategory, selectedCategory, setSelectedCategory, } = props;
+const DeleteBannerModal = (props: PropTypes) => {
+    const { isOpen, onOpenChange, onClose, refetchBanner, selectedBanner, setSelectedBanner, } = props;
 
     const {
-        mutateDeleteCategory,
-        isPendingDeleteCategory,
-        isSuccessDeleteCategory,
-    } = useDeleteCategoryModal();
+        mutateDeleteBanner,
+        isPendingDeleteBanner,
+        isSuccessDeleteBanner,
+    } = useDeleteBannerModal();
 
     useEffect(() => {
-        if (isSuccessDeleteCategory) {
+        if (isSuccessDeleteBanner) {
             onClose();
-            refetchCategory();
-            setSelectedCategory(null);
+            refetchBanner();
+            setSelectedBanner(null);
         }
-    }, [isSuccessDeleteCategory, onClose, refetchCategory]);
+    }, [isSuccessDeleteBanner, onClose, refetchBanner]);
 
     const handleDelete = () => {
-        if (!selectedCategory?._id) return;
+        if (!selectedBanner?._id) return;
 
-        mutateDeleteCategory({
-            id: selectedCategory._id,
-            iconUrl: selectedCategory.icon || "",
+        console.log("Image URL:", selectedBanner.image);
+
+        mutateDeleteBanner({
+            id: selectedBanner._id,
+            imageUrl: selectedBanner.image || "",
         });
     };
 
@@ -50,9 +53,9 @@ const DeleteCategoryModal = (props: PropTypes) => {
             scrollBehavior="inside">
 
             <ModalContent className="mb-4">
-                <ModalHeader>Delete Category</ModalHeader>
+                <ModalHeader>Delete Banner</ModalHeader>
                 <ModalBody>
-                    <p className="text-medium font-bold">Are you sure to Delete this category ?</p>
+                    <p className="text-medium font-bold">Are you sure to Delete this Banner ?</p>
                 </ModalBody>
 
                 <ModalFooter>
@@ -62,11 +65,11 @@ const DeleteCategoryModal = (props: PropTypes) => {
                         onPress={() => {
                             onClose();
                             // setSelectedId("");
-                            setSelectedCategory(null);
+                            setSelectedBanner(null);
                         }}
-                        disabled={isPendingDeleteCategory}
+                        disabled={isPendingDeleteBanner}
                     >
-                        {isPendingDeleteCategory ? (
+                        {isPendingDeleteBanner ? (
                             <Spinner size="sm" color="primary" />
                         ) : ("Cancel")}
                     </Button>
@@ -74,14 +77,14 @@ const DeleteCategoryModal = (props: PropTypes) => {
                     <Button
                         color="danger"
                         type="submit"
-                        disabled={isPendingDeleteCategory}
-                        // onPress={() => mutateDeleteCategory(selectedId)}
+                        disabled={isPendingDeleteBanner}
+                        // onPress={() => mutateDeleteBanner(selectedId)}
                         onPress={handleDelete}
                     >
 
-                        {isPendingDeleteCategory ? (
+                        {isPendingDeleteBanner ? (
                             <Spinner size="sm" color="primary" />
-                        ) : ("Delete Category")}
+                        ) : ("Delete Banner")}
                     </Button>
 
                 </ModalFooter>
@@ -91,4 +94,4 @@ const DeleteCategoryModal = (props: PropTypes) => {
     );
 };
 
-export default DeleteCategoryModal
+export default DeleteBannerModal
