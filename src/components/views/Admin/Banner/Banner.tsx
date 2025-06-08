@@ -8,6 +8,7 @@ import AddCategoryModal from './AddBannerModal';
 import DeleteCategoryModal from './DeleteBannerModal';
 import DropdownAction from "@/components/commons/DropdownAction";
 import useBanner from "./useBanner";
+import AddBannerModal from "./AddBannerModal";
 
 const Banner = () => {
     const { push, query } = useRouter();
@@ -30,7 +31,7 @@ const Banner = () => {
             const cellValue = banner[columnKey as keyof typeof banner];
             switch (columnKey) {
                 case "image":
-                    return (<Image src={`${cellValue}`} alt="image" width={200} height={50} />);
+                    return (<Image src={`${cellValue}`} alt="image" width={300} height={100} className="rounded-lg" />);
                 case "isShow":
                     return (
                         <Chip color={cellValue ? "success" : "warning"} size="sm" variant="flat">
@@ -74,9 +75,9 @@ const Banner = () => {
                         totalPages={dataBanners?.pagination.totalPages}
                     />
                 )}
-                {/* <AddCategoryModal refetchCategory={refetchBanners} {...addBannerModal} />
+                <AddBannerModal refetchBanner={refetchBanners} {...addBannerModal} />
 
-                <DeleteCategoryModal
+                {/* <DeleteCategoryModal
                     {...deleteBannerModal}
                     selectedCategory={selectedId}
                     setSelectedCategory={setSelectedId}

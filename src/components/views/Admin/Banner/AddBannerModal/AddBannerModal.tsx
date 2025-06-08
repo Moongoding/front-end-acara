@@ -1,4 +1,4 @@
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, Textarea } from "@nextui-org/react";
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Spinner } from "@nextui-org/react";
 import { Controller } from "react-hook-form";
 import InputFile from "@/components/ui/InputFile";
 import { useEffect } from "react";
@@ -7,20 +7,20 @@ import useAddBannerModal from "./useAddBannerModal";
 interface PropTypes {
     isOpen?: boolean;
     onClose: () => void;
-    refetchCategory: () => void;
+    refetchBanner: () => void;
     onOpenChange: () => void;
 };
 
-const AddCategoryModal = (props: PropTypes) => {
-    const { isOpen, onClose, refetchCategory, onOpenChange } = props;
+const AddBannerModal = (props: PropTypes) => {
+    const { isOpen, onClose, refetchBanner, onOpenChange } = props;
 
     const {
         control,
         errors,
         handleSubmitForm,
-        handleAddCategory,
-        isPendingAddCategory,
-        isSuccessAddCategory,
+        handleAddBanner,
+        isPendingAddBanner,
+        isSuccessAddBanner,
         handleCancel,
 
         preview,
@@ -33,15 +33,15 @@ const AddCategoryModal = (props: PropTypes) => {
 
 
     useEffect(() => {
-        if (isSuccessAddCategory) {
+        if (isSuccessAddBanner) {
             onClose();
-            refetchCategory();
+            refetchBanner();
         }
-    }, [isSuccessAddCategory]);
+    }, [isSuccessAddBanner]);
 
 
 
-    const disabledSubmit = isPendingAddCategory || isPendingUploadFile || isPendingDeleteFile
+    const disabledSubmit = isPendingAddBanner || isPendingUploadFile || isPendingDeleteFile
 
     return (
         <Modal
@@ -51,40 +51,53 @@ const AddCategoryModal = (props: PropTypes) => {
             placement="center"
             scrollBehavior="inside">
             <form onSubmit={handleSubmitForm
-                (handleAddCategory)}>
+                (handleAddBanner)}>
                 <ModalContent className="mb-4">
-                    <ModalHeader>Add Category</ModalHeader>
+                    <ModalHeader>Add Banner</ModalHeader>
                     <ModalBody>
                         <div className="flex flex-col gap-2">
                             <p className="text-sm font-bold">Information</p>
-                            <Controller title="title" control={control} render={({ field }) => (
-                                <Input {...field} autoFocus label="title" variant="bordered" type="text" isInvalid={errors.title !== undefined} errorMessage={errors.name?.message} />
-                            )} />
 
-                            <Controller name="description" control={control} render={({ field }) => (
-                                <Textarea
-                                    {...field}
-                                    label="Description"
-                                    variant="bordered"
-                                    isInvalid={errors.description !== undefined}
-                                    errorMessage={errors.description?.message}
-                                    className="mb-2"
+                            <Controller name="title" control={control} render={({ field }) => (
+                                <Input
+                                    {...field} autoFocus
+                                    label="Title" variant="bordered"
+                                    type="text" isInvalid={errors.title !== undefined}
+                                    errorMessage={errors.title?.message}
                                 />
                             )} />
 
-                            <p className="text-sm font-bold">Icon</p>
+
                             <Controller
-                                name="icon"
+                                name="isShow"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select
+                                        {...field}
+                                        label="Status"
+                                        variant="bordered"
+                                        isInvalid={errors.isShow !== undefined}
+                                        errorMessage={errors.isShow?.message}
+                                        disallowEmptySelection
+                                    >
+                                        <SelectItem key="true" value="true">Show</SelectItem>
+                                        <SelectItem key="false" value="false">Hide</SelectItem>
+                                    </Select>
+                                )} />
+
+                            <p className="text-sm font-bold">Image</p>
+                            <Controller
+                                name="image"
                                 control={control}
                                 render={({ field: { onChange, value, ...field } }) => (
                                     <InputFile
                                         {...field}
-                                        onUpload={(files) => handleUploadIcon(files, onChange)}
+                                        onUpload={(files) => handleUploadImage(files, onChange)}
                                         isUploading={isPendingUploadFile}
-                                        onDelete={() => handleDeleteIcon(onChange)}
+                                        onDelete={() => handleDeleteImage(onChange)}
                                         isDeleting={isPendingDeleteFile}
-                                        isInvalid={errors.icon !== undefined}
-                                        errorMessage={errors.icon?.message}
+                                        isInvalid={errors.image !== undefined}
+                                        errorMessage={errors.image?.message}
                                         isDropable
                                         preview={typeof preview === 'string' ? preview : ""}
                                         clasName="mb-2"
@@ -112,7 +125,7 @@ const AddCategoryModal = (props: PropTypes) => {
 
                             {disabledSubmit ? (
                                 <Spinner size="sm" color="primary" />
-                            ) : ("Create Category")}
+                            ) : ("Create Banner")}
                         </Button>
 
                     </ModalFooter>
@@ -122,4 +135,4 @@ const AddCategoryModal = (props: PropTypes) => {
     );
 };
 
-export default AddCategoryModal;
+export default AddBannerModal;

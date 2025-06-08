@@ -21,7 +21,6 @@ const schema = yup.object().shape({
 });
 
 
-
 const useAddBannerModal = () => {
     const router = useRouter();
     const { showToaster } = useContext(ToasterContext);
@@ -97,11 +96,11 @@ const useAddBannerModal = () => {
         return res;
     };
 
-    // 🔁 Add Category Mutation
+    // 🔁 Add Banner Mutation
     const {
-        mutate: mutateAddCategory,
-        isPending: isPendingAddCategory,
-        isSuccess: isSuccessAddCategory
+        mutate: mutateAddBanner,
+        isPending: isPendingAddBanner,
+        isSuccess: isSuccessAddBanner
     } = useMutation({
         mutationFn: addBanner,
         onError: (error) => handleApiError(error, showToaster, router),
@@ -112,7 +111,7 @@ const useAddBannerModal = () => {
     });
 
     // 📩 Submit Handler
-    const handleAddCategory = (data: IBanner) => mutateAddCategory(data);
+    const handleAddBanner = (data: IBanner) => mutateAddBanner(data);
 
     return {
         // Form
@@ -122,9 +121,9 @@ const useAddBannerModal = () => {
         handleSubmitForm,
 
         // Submission
-        handleAddCategory,
-        isPendingAddCategory,
-        isSuccessAddCategory,
+        handleAddBanner,
+        isPendingAddBanner,
+        isSuccessAddBanner,
 
         // Icon Upload
         preview,
