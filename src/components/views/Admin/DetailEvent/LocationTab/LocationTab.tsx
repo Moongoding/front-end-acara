@@ -1,5 +1,5 @@
 import { IEventForm, IRegency } from "@/types/Event";
-import { Autocomplete, AutocompleteItem, Button, Card, CardBody, CardHeader, DatePicker, Input, Select, SelectItem, Skeleton, Spinner, Textarea } from "@nextui-org/react"
+import { Autocomplete, AutocompleteItem, Button, Card, CardBody, CardHeader, Input, Select, SelectItem, Skeleton, Spinner } from "@nextui-org/react"
 import useLocationTab from "./useLocationTab";
 import { Controller, useWatch } from "react-hook-form";
 import { useEffect, useMemo } from "react";

@@ -101,7 +101,7 @@ const BannerTab = (props: PropTypes) => {
 
                         {disabledSubmit ? (
                             <Spinner size="sm" color="primary" />
-                        ) : ("Save Change Category")}
+                        ) : ("Save Change Banner")}
                     </Button>
                 </form>
             </CardBody>

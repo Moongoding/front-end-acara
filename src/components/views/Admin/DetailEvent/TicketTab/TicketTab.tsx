@@ -8,6 +8,7 @@ import useTicketTab from "./useTicketTab";
 import AddTicketModal from "./AddTicketModal";
 import DeleteTicketModal from "./DeleteTicketModal";
 import { ITicket } from "@/types/Ticket";
+import UpdateTicketModal from "./UpdateTicketModal";
 
 const TicketTab = () => {
     const addTicketModal = useDisclosure();
@@ -40,6 +41,7 @@ const TicketTab = () => {
                                 updateTicketModal.onOpen();
                             }}
                             onPressDelete={() => {
+                                setSelectedData(ticket as ITicket)
                                 deleteTicketModal.onOpen();
                             }}
                         />
@@ -85,6 +87,13 @@ const TicketTab = () => {
 
             <DeleteTicketModal
                 {...deleteTicketModal}
+                selectedData={selectedData}
+                setSelectedData={setSelectedData}
+                refetchTicket={refetchTicket}
+            />
+
+            <UpdateTicketModal
+                {...updateTicketModal}
                 selectedData={selectedData}
                 setSelectedData={setSelectedData}
                 refetchTicket={refetchTicket}
