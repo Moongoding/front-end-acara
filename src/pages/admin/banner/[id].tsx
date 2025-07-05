@@ -10,4 +10,4 @@ const AdminDetailBannerPage = () => {
     );
 };
 
-export default AdminDetailCategoryPage;
+export default AdminDetailBannerPage;

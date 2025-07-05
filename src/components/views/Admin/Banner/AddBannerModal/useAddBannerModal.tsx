@@ -16,7 +16,7 @@ import { IBanner } from '@/types/Banner';
 // 🧠 Yup Validation Schema
 const schema = yup.object().shape({
     title: yup.string().required("Please input title"),
-    isShow: yup.string().required("Please input isShow"),
+    isShow: yup.string().required("Please Select Show Status"),
     image: yup.mixed<FileList | string>().required("Please input the image"),
 });
 
