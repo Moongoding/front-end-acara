@@ -69,8 +69,8 @@ const ImageTab = (props: PropTypes) => {
                 })}>
                     <div className="flex flex-col gap-2">
                         <p className="text-sm font-medium text-default-700">Current Image</p>
-                        <Skeleton isLoaded={!!currentImage} className="h-32 rounded-lg">
-                            <Image src={currentImage} alt="Image" fill className="!relative rounded-lg" />
+                        <Skeleton isLoaded={!!currentImage} className="aspect-square h-44 rounded-lg">
+                            <Image src={currentImage} alt="Image" fill className="!relative" />
                         </Skeleton>
                     </div>
 
